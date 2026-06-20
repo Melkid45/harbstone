@@ -1,0 +1,99 @@
+/* Preloader */
+.preload-text {
+  font-size: 150px;
+  font-weight: 400;
+  line-height: 100%;
+  letter-spacing: -2px;
+  color: var(--dark);
+}
+
+.preloader {
+  --preloader-duration: 1.6s;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  width: 100%;
+  height: 100vh;
+  background: white;
+  overflow: hidden;
+  will-change: opacity;
+  &__body {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    width: 100%;
+    height: 100%;
+  }
+  &__text {
+    display: block;
+    color: var(--dark);
+    font-family: "DM Serif Text", serif;
+    font-size: clamp(60px, 8vw, 120px);
+    line-height: 1;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    &--under {
+      opacity: 0.2;
+      animation: preloader-base-pulse var(--preloader-duration) ease-in-out
+        forwards;
+    }
+    &--over {
+      position: absolute;
+      clip-path: inset(0 100% 0 0);
+      will-change: clip-path;
+      animation: preloader-text-reveal var(--preloader-duration)
+        cubic-bezier(0.65, 0, 0.35, 1) forwards;
+    }
+  }
+}
+
+@keyframes preloader-text-reveal {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes preloader-base-pulse {
+  from {
+    opacity: 0.12;
+  }
+  to {
+    opacity: 0.28;
+  }
+}
+
+@media (max-width: 1024px) {
+  .preloader {
+    &__text {
+      font-size: clamp(48px, 8vw, 72px);
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .preloader {
+    &__body {
+      padding: 20px;
+    }
+    &__text {
+      font-size: clamp(36px, 11vw, 60px);
+      text-align: center;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preloader {
+    &__text {
+      animation: none;
+      &--over {
+        clip-path: inset(0 0 0 0);
+      }
+    }
+  }
+}

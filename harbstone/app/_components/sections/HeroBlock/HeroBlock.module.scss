@@ -1,0 +1,23 @@
+.block__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.block__header {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    position: relative;
+    z-index: 2;
+
+    &--grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    &--pb {
+        padding-bottom: 60px;
+    }
+}

@@ -1,0 +1,318 @@
+/* Block */
+.block {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+
+  &--narrow {
+    margin: 0 auto;
+    max-width: 1300px;
+  }
+
+  &--pt {
+    padding-top: 150px;
+  }
+
+  &--pb {
+    padding-bottom: 150px;
+  }
+
+  &--y {
+    padding: 150px 0px;
+  }
+
+  &--white {
+    background: white;
+  }
+
+  &--dark {
+    background: var(--dark);
+  }
+
+  &--dark-deep {
+    background: var(--dark-deep);
+  }
+
+  &--overflow-visible {
+    overflow: visible;
+  }
+
+  &--overflow-hidden {
+    overflow: hidden;
+  }
+
+  &__breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 60px;
+
+    a {
+      opacity: 0.3;
+      transition: opacity 0.5s ease;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    position: relative;
+    z-index: 2;
+
+    &--grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    &--pb {
+      padding-bottom: 60px;
+    }
+  }
+
+  &__nav {
+    display: flex;
+    gap: 40px;
+
+    &--right {
+      display: flex;
+      align-items: end;
+      justify-content: right;
+      flex-wrap: wrap;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-top: 20px;
+  }
+
+  &__stats {
+    display: flex;
+    gap: 80px;
+    margin-top: 40px;
+  }
+
+  &__stat {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+
+    p {
+      opacity: 0.3;
+    }
+  }
+
+  &__video {
+    width: 100%;
+    max-height: 80vh;
+    aspect-ratio: 16 / 10;
+    background: black;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+  }
+
+  &__video-player {
+    height: 100%;
+  }
+
+  &__gallery {
+    display: grid;
+    gap: 40px;
+
+    &--table {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+    }
+  }
+
+  &__gallery-item {
+    position: relative;
+    margin: 2px;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+
+    i {
+      position: relative;
+      display: block;
+      width: 100%;
+      height: 0;
+    }
+
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+}
+
+@media screen and (max-width: 1800px) {
+  .block {
+    &--pt {
+      padding-top: 100px;
+    }
+
+    &--pb {
+      padding-bottom: 100px;
+    }
+
+    &--y {
+      padding: 100px 0px;
+    }
+
+    &__breadcrumbs {
+      margin-bottom: 40px;
+    }
+
+    &__title {
+      gap: 30px;
+    }
+  }
+}
+
+@media screen and (max-width: 1300px) {
+  .block {
+    &--pt {
+      padding-top: 70px;
+    }
+
+    &--pb {
+      padding-bottom: 70px;
+    }
+
+    &--y {
+      padding: 70px 0px;
+    }
+
+    &__header {
+      &--grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    &__title {
+      gap: 20px;
+    }
+
+    &__nav {
+      &--right {
+        align-items: start;
+        justify-content: start;
+      }
+    }
+
+    &__actions {
+      margin-top: 10px;
+    }
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  .block {
+    &--pt {
+      padding-top: 60px;
+    }
+
+    &--pb {
+      padding-bottom: 60px;
+    }
+
+    &--y {
+      padding: 60px 0px;
+    }
+
+    &__header {
+      &--pb {
+        padding-bottom: 40px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .block {
+    &__nav {
+      gap: 30px;
+    }
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .block {
+    &--pt {
+      padding-top: 50px;
+    }
+
+    &--pb {
+      padding-bottom: 50px;
+    }
+
+    &--y {
+      padding: 50px 0px;
+    }
+
+    &__header {
+      gap: 30px;
+    }
+
+    &__actions {
+      margin: 0;
+    }
+  }
+}
+
+@media screen and (max-width: 660px) {
+  .block {
+    &--pt {
+      padding-top: 40px;
+    }
+
+    &--pb {
+      padding-bottom: 40px;
+    }
+
+
+    &--y {
+      padding: 40px 0px;
+    }
+
+    &__actions {
+      gap: 20px;
+    }
+
+    &__stats {
+      flex-wrap: wrap;
+    }
+
+    &__video {
+      aspect-ratio: 4 / 3;
+    }
+  }
+}
+
+@media screen and (max-width: 460px) {
+  .block {
+    &__actions {
+      .button {
+        width: 100%;
+      }
+    }
+
+    &__stats {
+      margin-top: 20px;
+      gap: 40px;
+    }
+  }
+}

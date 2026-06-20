@@ -1,0 +1,131 @@
+/* Works */
+.works {
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 50px;
+  row-gap: 80px;
+  &__item {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    &:hover,
+    &:focus-visible {
+      .works__image {
+        opacity: 0;
+      }
+      .works__video {
+        opacity: 1;
+      }
+    }
+    &--active {
+      .works__image {
+        opacity: 0;
+      }
+      .works__video {
+        opacity: 1;
+      }
+    }
+  }
+  &__media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    background: var(--dark);
+    img,
+    video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: opacity 0.35s ease;
+    }
+  }
+  &__image {
+    z-index: 1;
+    opacity: 1;
+  }
+  &__video {
+    z-index: 2;
+    opacity: 0;
+  }
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+  &__more {
+    grid-column: 1 / -1;
+    justify-self: center;
+    margin-top: 40px;
+    width: 100%;
+    max-width: 500px;
+  }
+}
+
+@media screen and (max-width: 1800px) {
+  .works {
+    &__more {
+      margin-top: 20px;
+      max-width: 440px;
+    }
+  }
+}
+
+@media screen and (max-width: 1500px) {
+  .works {
+    column-gap: 40px;
+    &__more {
+      margin-top: 10px;
+      max-width: 400px;
+    }
+  }
+}
+
+@media screen and (max-width: 1300px) {
+  .works {
+    column-gap: 30px;
+    &__more {
+      margin-top: 0;
+      max-width: fit-content;
+    }
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .works {
+    grid-template-columns: 1fr;
+    column-gap: 0;
+    row-gap: 60px;
+    &__item {
+      gap: 0;
+      row-gap: 40px;
+    }
+    &__media {
+      aspect-ratio: 6 / 4;
+    }
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .works {
+    row-gap: 50px;
+    &__item {
+      row-gap: 30px;
+    }
+    &__media {
+      aspect-ratio: 16 / 10;
+    }
+  }
+}
+
+@media screen and (max-width: 660px) {
+  .works {
+    &__media {
+      aspect-ratio: 4 / 3;
+    }
+  }
+}
