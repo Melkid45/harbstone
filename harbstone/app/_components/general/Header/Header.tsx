@@ -2,7 +2,7 @@
 
 import { ArrowUpRight, TextAlignJustify, X } from "lucide-react";
 import Image from "next/image";
-import React, { useEffect, useRef, useState } from "react";
+import React, { CSSProperties, useEffect, useRef, useState } from "react";
 import Logo from '@/app/assets/images/logo.svg';
 import Link from "next/link";
 import styles from './Header.module.scss';
@@ -15,6 +15,7 @@ interface HeaderProps {
     email?: string;
     numbers?: NumbersArray[];
     social?: SocialArray[];
+    language?: LanguageItem[];
 }
 
 
@@ -34,7 +35,9 @@ interface SocialArray {
     label: string;
     href?: string;
 }
-
+interface LanguageItem {
+    name: string;
+}
 const NavigationMenu: NavigationArray[] = [
     {
         label: 'Works',
@@ -67,7 +70,7 @@ const NavigationMenu: NavigationArray[] = [
     },
     {
         label: 'Contacts',
-        href: '/contacts'
+        href: '/contact'
     },
 ]
 
@@ -96,16 +99,26 @@ const socialMain: SocialArray[] = [
         href: '#'
     },
 ]
+const languageArray: LanguageItem[] = [
+    {
+        name: 'LV'
+    },
+    {
+        name: 'RU'
+    },
+]
 
 export default function Header({
     navigation = NavigationMenu,
     email = emailMain,
     numbers = numbersMain,
-    social = socialMain
+    social = socialMain,
+    language = languageArray
 }: HeaderProps) {
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement | null>(null);
     const timelineRef = useRef<gsap.core.Timeline | null>(null);
+    const languageListWidth = `${language.length * 55 + Math.max(language.length - 1, 0) * 12}px`;
     const switchMenu = () => {
         setIsOpen((current) => !current);
     }
@@ -235,17 +248,36 @@ export default function Header({
                         <Link href="/" className={styles.header__logo}>
                             <Image loading="eager" src={Logo} alt="" />
                         </Link>
-                        <button
-                            type="button"
-                            className={`${styles['header-menu-open']} ${isOpen ? styles['header-menu-open--opened'] : ''}`}
-                            onClick={switchMenu}
-                            aria-expanded={isOpen}
-                            aria-controls="main-menu"
-                            aria-label={isOpen ? 'Close menu' : 'Open menu'}
-                        >
-                            <TextAlignJustify className={styles['header-menu-open__burger']} />
-                            <X className={styles['header-menu-open__close']} />
-                        </button>
+                        <div className={styles.header__action}>
+                            <div
+                                className={styles.header__language}
+                                style={{ '--language-list-width': languageListWidth } as CSSProperties}
+                                aria-label="Выбор языка"
+                                tabIndex={0}
+                            >
+                                <div className={styles['header__language-all']}>
+                                    {language.map((item) => (
+                                        <Link key={item.name} className='text text--small text--white-color' href="">
+                                            {item.name}
+                                        </Link>
+                                    ))}
+                                </div>
+                                <div className={`${styles['header__language-main']} text text--small text--dark-color`}>
+                                    EN
+                                </div>
+                            </div>
+                            <button
+                                type="button"
+                                className={`${styles['header-menu-open']} ${isOpen ? styles['header-menu-open--opened'] : ''}`}
+                                onClick={switchMenu}
+                                aria-expanded={isOpen}
+                                aria-controls="main-menu"
+                                aria-label={isOpen ? 'Close menu' : 'Open menu'}
+                            >
+                                <TextAlignJustify className={styles['header-menu-open__burger']} />
+                                <X className={styles['header-menu-open__close']} />
+                            </button>
+                        </div>
                     </div>
                 </Container>
             </header>
@@ -271,7 +303,7 @@ export default function Header({
                                                 </div>
                                             </React.Fragment>
                                         ) : (
-                                            <Link key={item.label} href={item.href ? item.href : ''} className="heading heading--font-1 heading--standard heading--dark-color" data-menu-item>
+                                            <Link key={item.label} href={item.href ? item.href : ''} onClick={switchMenu} className="heading heading--font-1 heading--standard heading--dark-color" data-menu-item>
                                                 {item.label}
                                             </Link>
                                         )

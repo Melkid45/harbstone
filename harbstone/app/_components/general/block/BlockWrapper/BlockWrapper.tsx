@@ -4,7 +4,7 @@ import Container from "../../Container/Container";
 interface BlockWrapperProps {
     children: string | ReactNode;
     isContainer?: boolean;
-    padding?: 'pt' | 'pb' | 'y';
+    padding?: 'pt' | 'pb' | 'y' | 'none';
     size?: 'narrow'
     background?: 'white' | 'dark' | 'dark-deep';
     overflow?: 'hidden' | 'visible';

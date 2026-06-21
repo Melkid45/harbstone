@@ -4,6 +4,7 @@ import { DM_Serif_Text, Plus_Jakarta_Sans } from "next/font/google";
 import '@splidejs/react-splide/css';
 import './global.scss';
 import Header from "./_components/general/Header/Header";
+import LenisRouteSync from "./_components/general/LenisRouteSync/LenisRouteSync";
 import PageUnder from "./_components/general/PageUnder/PageUnder";
 import Preloader from "./_components/general/Preloader/Preloader";
 const dmSans = DM_Serif_Text({
@@ -32,6 +33,7 @@ export default function RootLayout({
     >
       <body className="min-h-full is-preloading">
         <ReactLenis root />
+        <LenisRouteSync />
         <Preloader />
         <Header />
         <main>

@@ -11,6 +11,7 @@ import Button from "../../general/Button/Button";
 interface ServicesBlockProps {
     title: string;
     description: string;
+    dark?: boolean;
     services: {
         name: string;
         description: string;
@@ -27,11 +28,12 @@ interface ServicesBlockProps {
 export default function ServicesBlock({
     title,
     description,
+    dark = false,
     services
 }: ServicesBlockProps) {
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const videoRefs = useRef<Array<HTMLVideoElement | null>>([]);
-
+    const whiteProperty = dark && 'white';
     useEffect(() => {
         const videos = videoRefs.current;
 
@@ -76,11 +78,12 @@ export default function ServicesBlock({
     };
 
     return (
-        <BlockWrapper padding="pt" background="white" overflow="visible">
-            <div className={`${styles.block__header} ${styles['block__header--pb']}`}>
+        <BlockWrapper padding={dark ? 'y' : 'pb'} background={dark ? 'dark' : 'white'} overflow="visible">
+            <div className="block__header block__header--pb">
                 <BlockTitle
                     title={title}
                     description={description}
+                    type={dark ? 'white' : 'default'}
                 />
             </div>
             <div className={styles.services}>
@@ -89,7 +92,7 @@ export default function ServicesBlock({
                         key={item.name}
                         className={`
                             ${styles.services__item}
-                            ${styles['services__item--light']}
+                            ${dark ? styles['services__item--dark'] : styles['services__item--light']}
                             ${styles['services__item--grid']}
                             ${activeIndex === index ? styles['services__item--active'] : ''}
                         `}
@@ -101,16 +104,16 @@ export default function ServicesBlock({
                     >
                         <div className={styles.services__content}>
                             <div className={styles.services__description}>
-                                <Link href={item.href} className="heading heading--small heading--font-2 heading--weight-600 heading--dark-color">
+                                <Link href={item.href} className={`heading heading--small heading--font-2 heading--weight-600 ${dark ? 'heading--white-color' : 'heading--dark-color'}`}>
                                     {item.name}
                                 </Link>
-                                <p className="text text--medium text--dark-color">
+                                <p className={`text text--medium ${dark ? 'text--white-color' : 'text--dark-color'}`}>
                                     {item.description}
                                 </p>
                             </div>
                             <div className={styles.services__tags}>
                                 {item.children.map((item) => (
-                                    <Button key={item.name} isLink={true} href={item.href} size="large" background="light" color="dark">
+                                    <Button key={item.name} isLink={true} href={item.href} size="large" background={dark ? 'dark' : 'light'} color={dark ? 'white' : 'dark'}>
                                         {item.name}
                                     </Button>
                                 ))}

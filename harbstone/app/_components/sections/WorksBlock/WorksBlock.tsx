@@ -11,6 +11,7 @@ import Button from "../../general/Button/Button";
 interface WorksBlockProps {
     title: string;
     description: string;
+    padding?: 'y' | 'pt' | 'pb';
     categories: {
         label: string;
         href: string
@@ -28,7 +29,8 @@ export default function WorksBlock({
     title,
     description,
     categories,
-    works
+    works,
+    padding = 'pt'
 }: WorksBlockProps) {
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const videoRefs = useRef<Array<HTMLVideoElement | null>>([]);
@@ -77,7 +79,7 @@ export default function WorksBlock({
     };
 
     return (
-        <BlockWrapper padding="pt" background="white">
+        <BlockWrapper padding={padding} background="white">
             <div className="block__header block__header--grid block__header--pb">
                 <BlockTitle
                     title={title}

@@ -212,6 +212,7 @@ export default function Home() {
           },
         ]}
         works={worksArray}
+        padding="y"
       />
       <ServicesBlock
         title="Services"

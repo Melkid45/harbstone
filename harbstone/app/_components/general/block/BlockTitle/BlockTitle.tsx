@@ -5,13 +5,15 @@ interface BlockTitleProps {
     title: string | ReactNode;
     description?: string;
     type?: 'default' | 'white';
+    full?: boolean;
 }
 
 
 export default function BlockTitle({
     title,
     description,
-    type = 'default'
+    type = 'default',
+    full = false
 }: BlockTitleProps) {
     return (
         <div className={styles.block__title}>
@@ -21,7 +23,7 @@ export default function BlockTitle({
                 {title}
             </h3>
             {description && (
-                <p className="text text--medium text--dark-color text--mw">
+                <p className={`text text--medium ${type=='white' ? 'text--white-color' : 'text--dark-color'} ${!full && 'text--mw'}`}>
                     {description}
                 </p>
             )}

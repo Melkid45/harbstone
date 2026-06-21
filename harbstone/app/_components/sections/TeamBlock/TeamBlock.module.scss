@@ -1,0 +1,55 @@
+/* Team */
+.team-splide {
+  width: 100%;
+  .splide {
+    &__arrows {
+      position: absolute;
+      top: -21.5%;
+      right: 0;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    &__arrow {
+      position: static;
+      width: 54px;
+      height: 54px;
+      aspect-ratio: 1;
+      background: var(--dark);
+      border-radius: 50%;
+      transform: translateY(0);
+      transition: all 0.3s;
+      svg {
+        width: 24px;
+        height: 24px;
+        fill: none;
+        path {
+          stroke: white;
+        }
+      }
+    }
+  }
+  .team {
+    &__person {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      img {
+        width: 100%;
+        aspect-ratio: 3/4;
+        border-radius: var(--border-radius);
+        object-fit: cover;
+        height: auto;
+      }
+      &-data {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        span {
+          font-size: 42px;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+}

@@ -29,22 +29,6 @@
     gap: 30px;
   }
 }
-.block__header {
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
-    position: relative;
-    z-index: 2;
-
-    &--grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-    }
-
-    &--pb {
-      padding-bottom: 60px;
-    }
-  }
 
 @media screen and (max-width: 1800px) {
   .celebrities {

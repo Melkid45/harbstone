@@ -40,7 +40,7 @@ export default function CelebritiesBlock({
 }: CelebritiesBlockProps) {
     return (
         <BlockWrapper padding="pt" background="white">
-            <div className={`${styles.block__header} ${styles['block__header--pb']}`}>
+            <div className="block__header block__header--pb">
                 <BlockTitle
                     title={title}
                     description={description}

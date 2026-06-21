@@ -1,0 +1,22 @@
+/* How it works */
+.how-it-works {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: space-between;
+  gap: 80px;
+  &__item {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .how-it-works {
+    grid-template-columns: 1fr;
+    gap: 50px;
+    &__item {
+      gap: 20px;
+    }
+  }
+}
