@@ -29,8 +29,15 @@ export default function Preloader() {
             : 0;
         const startedAt = performance.now();
         let timeoutId: number | null = null;
+        let safetyTimeoutId: number | null = null;
+        let isComplete = false;
 
         const completePreloader = () => {
+            if (isComplete) {
+                return;
+            }
+
+            isComplete = true;
             document.body.classList.remove('is-preloading');
             window.dispatchEvent(new CustomEvent('preloader:done'));
             setIsHidden(true);
@@ -56,11 +63,19 @@ export default function Preloader() {
             window.addEventListener('load', hidePreloader, { once: true });
         }
 
+        safetyTimeoutId = window.setTimeout(() => {
+            completePreloader();
+        }, Math.max(minimumVisibleMs + 2000, 3000));
+
         return () => {
             window.removeEventListener('load', hidePreloader);
 
             if (timeoutId !== null) {
                 window.clearTimeout(timeoutId);
+            }
+
+            if (safetyTimeoutId !== null) {
+                window.clearTimeout(safetyTimeoutId);
             }
 
             gsap.killTweensOf(preloader);

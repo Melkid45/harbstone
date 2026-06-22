@@ -4,7 +4,8 @@ import { useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useLenis } from "lenis/react";
 
-const RESIZE_DELAYS = [80, 240, 600, 1200];
+const RESIZE_DELAYS = [80, 240, 600, 1200, 1800, 2600];
+const PRELOADER_RESIZE_DELAYS = [0, 120, 360];
 
 export default function LenisRouteSync() {
     const pathname = usePathname();
@@ -17,12 +18,7 @@ export default function LenisRouteSync() {
             return;
         }
 
-        const sync = () => {
-            document.documentElement.style.overflow = '';
-            document.body.style.overflow = '';
-            document.body.style.position = '';
-            document.body.style.top = '';
-            document.body.style.width = '';
+        const scrollToTop = () => {
             lenis.start();
             lenis.resize();
             lenis.scrollTo(0, {
@@ -32,14 +28,27 @@ export default function LenisRouteSync() {
             lenis.resize();
         };
 
-        const animationFrame = requestAnimationFrame(sync);
+        const resize = () => {
+            lenis.start();
+            lenis.resize();
+        };
+
+        const animationFrame = requestAnimationFrame(scrollToTop);
         const timeouts = RESIZE_DELAYS.map((delay) => (
-            window.setTimeout(sync, delay)
+            window.setTimeout(resize, delay)
         ));
+        const handlePreloaderDone = () => {
+            PRELOADER_RESIZE_DELAYS.forEach((delay) => {
+                window.setTimeout(resize, delay);
+            });
+        };
+
+        window.addEventListener('preloader:done', handlePreloaderDone);
 
         return () => {
             cancelAnimationFrame(animationFrame);
             timeouts.forEach((timeout) => window.clearTimeout(timeout));
+            window.removeEventListener('preloader:done', handlePreloaderDone);
         };
     }, [lenis, routeKey]);
 

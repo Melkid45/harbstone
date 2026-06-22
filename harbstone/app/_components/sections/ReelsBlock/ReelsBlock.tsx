@@ -84,7 +84,6 @@ export default function ReelsBlock({
                         title="Vimeo video"
                         loading="eager"
                         allow="autoplay; fullscreen; picture-in-picture"
-                        allowFullScreen
                         data-ready="true"
                     ></iframe>
                 </div>

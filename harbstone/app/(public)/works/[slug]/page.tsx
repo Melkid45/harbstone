@@ -3,7 +3,13 @@ import { notFound } from "next/navigation";
 import { getWorks, works } from "../works";
 import WorkHeroBlock from "@/app/_components/sections/WorksBlock/WorkHeroBlock/WorkHeroBlock";
 import WorksBlock from "@/app/_components/sections/WorksBlock/WorksBlock";
-
+import ReelsBlock from "@/app/_components/sections/ReelsBlock/ReelsBlock";
+import ShareBlock from "@/app/_components/sections/works/ShareBlock/ShareBlock";
+import IdeaBlock from "@/app/_components/sections/works/IdeaBlock/IdeaBlock";
+import GalleryBlock from "@/app/_components/sections/works/GalleryBlock/GalleryBlock";
+import Gallery1 from '@/app/assets/images/gallery/1.jpg';
+import Gallery2 from '@/app/assets/images/gallery/2.jpg';
+import Gallery3 from '@/app/assets/images/gallery/3.jpg';
 interface WorkPageProps {
     params: Promise<{
         slug: string;
@@ -52,6 +58,35 @@ export default async function ServicePage({
                 industry={work.industry}
                 categories={work.categories}
                 celebritie={work.celebritie}
+            />
+            <ReelsBlock
+                video="https://vimeo.com/547110638"
+            />
+            <IdeaBlock
+                title="Idea"
+                desctiption="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa."
+            />
+            <GalleryBlock
+                gallery={[
+                    {image: Gallery1},
+                    {image: Gallery2},
+                ]}
+            />
+            <IdeaBlock
+                desctiption="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus."
+            />
+            <GalleryBlock
+                gallery={[
+                    {image: Gallery3}
+                ]}
+            />
+            <IdeaBlock
+                desctiption="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa."
+            />
+            <ShareBlock
+                title={work.name}
+                slug={work.slug}
+                image={work.preview}
             />
             <WorksBlock
                 title="More Works"

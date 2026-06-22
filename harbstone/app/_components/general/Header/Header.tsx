@@ -6,6 +6,7 @@ import React, { CSSProperties, useEffect, useRef, useState } from "react";
 import Logo from '@/app/assets/images/logo.svg';
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useLenis } from "lenis/react";
 import styles from './Header.module.scss';
 import Container from "../Container/Container";
 import Button from "../Button/Button";
@@ -119,6 +120,7 @@ export default function Header({
 }: HeaderProps) {
     const [isOpen, setIsOpen] = useState(false);
     const pathname = usePathname();
+    const lenis = useLenis();
     const menuRef = useRef<HTMLDivElement | null>(null);
     const timelineRef = useRef<gsap.core.Timeline | null>(null);
     useBodyScrollLock(isOpen);
@@ -128,6 +130,31 @@ export default function Header({
     }
     const closeMenu = () => {
         setIsOpen(false);
+    };
+    const handleLogoClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+        closeMenu();
+
+        if (pathname !== '/') {
+            return;
+        }
+
+        event.preventDefault();
+
+        window.setTimeout(() => {
+            lenis?.start();
+
+            if (lenis) {
+                lenis.scrollTo(0, {
+                    duration: 0.9,
+                    force: true,
+                });
+            } else {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth',
+                });
+            }
+        }, 0);
     };
 
     useEffect(() => {
@@ -263,7 +290,7 @@ export default function Header({
             <header className={styles.header}>
                 <Container>
                     <div className={styles.header__body}>
-                        <Link onClick={closeMenu} href="/" className={styles.header__logo}>
+                        <Link onClick={handleLogoClick} href="/" className={styles.header__logo}>
                             <Image loading="eager" src={Logo} alt="" />
                         </Link>
                         <div className={styles.header__action}>
