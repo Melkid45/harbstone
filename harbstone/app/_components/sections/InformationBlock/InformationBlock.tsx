@@ -1,4 +1,3 @@
-import { ReactNode } from "react";
 import BlockWrapper from "../../general/block/BlockWrapper/BlockWrapper";
 import styles from './InformationBlock.module.scss';
 interface InformationBlockProps {

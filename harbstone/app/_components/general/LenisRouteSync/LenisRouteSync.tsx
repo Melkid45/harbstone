@@ -1,14 +1,16 @@
 'use client';
 
 import { useEffect } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useLenis } from "lenis/react";
 
-const RESIZE_DELAYS = [80, 240, 600];
+const RESIZE_DELAYS = [80, 240, 600, 1200];
 
 export default function LenisRouteSync() {
     const pathname = usePathname();
+    const searchParams = useSearchParams();
     const lenis = useLenis();
+    const routeKey = `${pathname}?${searchParams.toString()}`;
 
     useEffect(() => {
         if (!lenis) {
@@ -16,6 +18,12 @@ export default function LenisRouteSync() {
         }
 
         const sync = () => {
+            document.documentElement.style.overflow = '';
+            document.body.style.overflow = '';
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.width = '';
+            lenis.start();
             lenis.resize();
             lenis.scrollTo(0, {
                 immediate: true,
@@ -33,7 +41,7 @@ export default function LenisRouteSync() {
             cancelAnimationFrame(animationFrame);
             timeouts.forEach((timeout) => window.clearTimeout(timeout));
         };
-    }, [lenis, pathname]);
+    }, [lenis, routeKey]);
 
     return null;
 }

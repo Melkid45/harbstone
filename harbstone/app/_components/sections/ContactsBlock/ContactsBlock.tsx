@@ -88,6 +88,8 @@ export default function ContactsBlock({
                                         <Link
                                             key={item.label}
                                             href={item.href}
+                                            target={item.href.startsWith('http') ? '_blank' : undefined}
+                                            rel={item.href.startsWith('http') ? 'noreferrer' : undefined}
                                             className={`${styles['get-in-touch__link']} text text--medium text--dark-color text--weight-400`}
                                         >
                                             {item.label}
@@ -96,7 +98,7 @@ export default function ContactsBlock({
                                 </div>
                             </div>
                         </div>
-                        <Button size="large" color="white" background="dark">
+                        <Button size="large" color="white" background="dark" data-popup-open="request">
                             <ArrowUpRight/>
                             Start Your Project
                         </Button>
@@ -110,11 +112,14 @@ export default function ContactsBlock({
                                 Address:
                             </span>
 
-                            <a
+                            <Link
+                                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`}
+                                target="_blank"
+                                rel="noreferrer"
                                 className={`${styles['get-in-touch__link']} text text--medium text--dark-color text--weight-500`}
                             >
                                 {address}
-                            </a>
+                            </Link>
                         </div>
 
                         <iframe

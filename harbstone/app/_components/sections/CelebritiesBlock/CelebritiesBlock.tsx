@@ -2,6 +2,7 @@
 
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import Image, { StaticImageData } from 'next/image';
+import Link from 'next/link';
 import BlockTitle from "../../general/block/BlockTitle/BlockTitle";
 import BlockWrapper from "../../general/block/BlockWrapper/BlockWrapper";
 import styles from './CelebritiesBlock.module.scss';
@@ -53,7 +54,7 @@ export default function CelebritiesBlock({
             >
                 {celebrities.map((slide) => (
                     <SplideSlide key={slide.title}>
-                        <a href={slide.href} className={styles.celebrities__item}>
+                        <Link href={slide.href} className={styles.celebrities__item}>
                             <Image
                                 className={styles.celebrities__image}
                                 src={slide.image}
@@ -87,7 +88,7 @@ export default function CelebritiesBlock({
                                     {slide.description}
                                 </p>
                             </div>
-                        </a>
+                        </Link>
                     </SplideSlide>
                 ))}
             </Splide>

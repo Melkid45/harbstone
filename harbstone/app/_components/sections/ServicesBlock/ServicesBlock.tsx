@@ -9,18 +9,19 @@ import styles from './ServicesBlock.module.scss';
 import Button from "../../general/Button/Button";
 
 interface ServicesBlockProps {
-    title: string;
-    description: string;
+    title?: string;
+    description?: string;
     dark?: boolean;
     services: {
         name: string;
         description: string;
-        preview: StaticImageData | string;
-        video: string;
-        href: string;
-        children: {
+        preview?: StaticImageData | string;
+        video?: string;
+        href?: string;
+        children?: {
             name: string;
             href: string;
+            description?: string;
         }[];
     }[];
 }
@@ -33,7 +34,7 @@ export default function ServicesBlock({
 }: ServicesBlockProps) {
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const videoRefs = useRef<Array<HTMLVideoElement | null>>([]);
-    const whiteProperty = dark && 'white';
+
     useEffect(() => {
         const videos = videoRefs.current;
 
@@ -79,14 +80,16 @@ export default function ServicesBlock({
 
     return (
         <BlockWrapper padding={dark ? 'y' : 'pb'} background={dark ? 'dark' : 'white'} overflow="visible">
-            <div className="block__header block__header--pb">
-                <BlockTitle
-                    title={title}
-                    description={description}
-                    type={dark ? 'white' : 'default'}
-                />
-            </div>
-            <div className={styles.services}>
+            {title && description && (
+                <div className="block__header block__header--pb">
+                    <BlockTitle
+                        title={title}
+                        description={description}
+                        type={dark ? 'white' : 'default'}
+                    />
+                </div>
+            )}
+            <div className={`${styles.services} ${!title && !description && styles.services__only}`}>
                 {services.map((item, index) => (
                     <div
                         key={item.name}
@@ -104,43 +107,55 @@ export default function ServicesBlock({
                     >
                         <div className={styles.services__content}>
                             <div className={styles.services__description}>
-                                <Link href={item.href} className={`heading heading--small heading--font-2 heading--weight-600 ${dark ? 'heading--white-color' : 'heading--dark-color'}`}>
-                                    {item.name}
-                                </Link>
+                                {item.href ? (
+                                    <Link href={item.href} className={`heading heading--small heading--font-2 heading--weight-600 ${dark ? 'heading--white-color' : 'heading--dark-color'}`}>
+                                        {item.name}
+                                    </Link>
+                                ) : (
+                                    <h3 className={`heading heading--small heading--font-2 heading--weight-600 ${dark ? 'heading--white-color' : 'heading--dark-color'}`}>
+                                        {item.name}
+                                    </h3>
+                                )}
                                 <p className={`text text--medium ${dark ? 'text--white-color' : 'text--dark-color'}`}>
                                     {item.description}
                                 </p>
                             </div>
-                            <div className={styles.services__tags}>
-                                {item.children.map((item) => (
-                                    <Button key={item.name} isLink={true} href={item.href} size="large" background={dark ? 'dark' : 'light'} color={dark ? 'white' : 'dark'}>
-                                        {item.name}
-                                    </Button>
-                                ))}
+                            {item.children && (
+                                <div className={styles.services__tags}>
+                                    {item.children.map((item) => (
+                                        <Button key={item.name} isLink={true} href={item.href} size="large" background={dark ? 'dark' : 'light'} color={dark ? 'white' : 'dark'}>
+                                            {item.name}
+                                        </Button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                        {item.preview && (
+                            <div className={styles.services__media}>
+                                <Image
+                                    src={item.preview}
+                                    alt={item.name}
+                                    className={styles.services__image}
+                                    fill
+                                    sizes="(max-width: 1200px) 0px, 38vw"
+                                />
+                                {item.video && (
+                                    <video
+                                        ref={(node) => {
+                                            videoRefs.current[index] = node;
+                                        }}
+                                        className={styles.services__video}
+                                        preload="metadata"
+                                        playsInline
+                                        loop
+                                        muted
+                                        aria-hidden="true"
+                                    >
+                                        <source src={item.video} type="video/webm" />
+                                    </video>
+                                )}
                             </div>
-                        </div>
-                        <div className={styles.services__media}>
-                            <Image
-                                src={item.preview}
-                                alt={item.name}
-                                className={styles.services__image}
-                                fill
-                                sizes="(max-width: 1200px) 0px, 38vw"
-                            />
-                            <video
-                                ref={(node) => {
-                                    videoRefs.current[index] = node;
-                                }}
-                                className={styles.services__video}
-                                preload="metadata"
-                                playsInline
-                                loop
-                                muted
-                                aria-hidden="true"
-                            >
-                                <source src={item.video} type="video/webm" />
-                            </video>
-                        </div>
+                        )}
                     </div>
                 ))}
             </div>

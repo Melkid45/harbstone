@@ -1,11 +1,13 @@
 import ReactLenis from "lenis/react";
 import type { Metadata } from "next";
 import { DM_Serif_Text, Plus_Jakarta_Sans } from "next/font/google";
+import { Suspense } from "react";
 import '@splidejs/react-splide/css';
 import './global.scss';
 import Header from "./_components/general/Header/Header";
 import LenisRouteSync from "./_components/general/LenisRouteSync/LenisRouteSync";
 import PageUnder from "./_components/general/PageUnder/PageUnder";
+import PopupBlock from "./_components/general/PopupBlock/PopupBlock";
 import Preloader from "./_components/general/Preloader/Preloader";
 const dmSans = DM_Serif_Text({
   variable: "--font-title",
@@ -33,9 +35,12 @@ export default function RootLayout({
     >
       <body className="min-h-full is-preloading">
         <ReactLenis root />
-        <LenisRouteSync />
+        <Suspense fallback={null}>
+          <LenisRouteSync />
+        </Suspense>
         <Preloader />
         <Header />
+        <PopupBlock />
         <main>
           {children}
         </main>

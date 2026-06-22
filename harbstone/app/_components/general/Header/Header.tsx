@@ -5,10 +5,12 @@ import Image from "next/image";
 import React, { CSSProperties, useEffect, useRef, useState } from "react";
 import Logo from '@/app/assets/images/logo.svg';
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import styles from './Header.module.scss';
 import Container from "../Container/Container";
 import Button from "../Button/Button";
 import gsap from "gsap";
+import useBodyScrollLock from "@/app/_hooks/useBodyScrollLock";
 
 interface HeaderProps {
     navigation?: NavigationArray[];
@@ -48,15 +50,15 @@ const NavigationMenu: NavigationArray[] = [
         children: [
             {
                 label: 'Web Dev',
-                href: ''
+                href: '/services/web-dev'
             },
             {
                 label: 'Video Production',
-                href: ''
+                href: '/services/video-production'
             },
             {
                 label: 'Content & Promotion',
-                href: ''
+                href: '/services/viral-promotion'
             },
         ]
     },
@@ -88,15 +90,15 @@ const numbersMain: NumbersArray[] = [
 const socialMain: SocialArray[] = [
     {
         label: 'X (Twitter)',
-        href: '#'
+        href: 'https://x.com'
     },
     {
         label: 'Instagram',
-        href: '#'
+        href: 'https://www.instagram.com'
     },
     {
         label: 'Vimeo',
-        href: '#'
+        href: 'https://vimeo.com'
     },
 ]
 const languageArray: LanguageItem[] = [
@@ -116,12 +118,28 @@ export default function Header({
     language = languageArray
 }: HeaderProps) {
     const [isOpen, setIsOpen] = useState(false);
+    const pathname = usePathname();
     const menuRef = useRef<HTMLDivElement | null>(null);
     const timelineRef = useRef<gsap.core.Timeline | null>(null);
+    useBodyScrollLock(isOpen);
     const languageListWidth = `${language.length * 55 + Math.max(language.length - 1, 0) * 12}px`;
     const switchMenu = () => {
         setIsOpen((current) => !current);
     }
+    const closeMenu = () => {
+        setIsOpen(false);
+    };
+
+    useEffect(() => {
+        const animationFrame = requestAnimationFrame(() => {
+            setIsOpen(false);
+        });
+
+        return () => {
+            cancelAnimationFrame(animationFrame);
+        };
+    }, [pathname]);
+
     useEffect(() => {
         const menu = menuRef.current;
 
@@ -245,7 +263,7 @@ export default function Header({
             <header className={styles.header}>
                 <Container>
                     <div className={styles.header__body}>
-                        <Link href="/" className={styles.header__logo}>
+                        <Link onClick={closeMenu} href="/" className={styles.header__logo}>
                             <Image loading="eager" src={Logo} alt="" />
                         </Link>
                         <div className={styles.header__action}>
@@ -257,7 +275,7 @@ export default function Header({
                             >
                                 <div className={styles['header__language-all']}>
                                     {language.map((item) => (
-                                        <Link key={item.name} className='text text--small text--white-color' href="">
+                                        <Link key={item.name} className='text text--small text--white-color' href="/" onClick={closeMenu}>
                                             {item.name}
                                         </Link>
                                     ))}
@@ -290,12 +308,12 @@ export default function Header({
                                     {navigation.map((item) => (
                                         item.children ? (
                                             <React.Fragment key={item.label}>
-                                                <Link href={item.href ? item.href : ''} className="heading heading--font-1 heading--standard heading--dark-color" data-menu-item>
+                                                <Link href={item.href ? item.href : '/services'} onClick={closeMenu} className="heading heading--font-1 heading--standard heading--dark-color" data-menu-item>
                                                     {item.label}
                                                 </Link>
                                                 <div>
                                                     {item.children.map((child) => (
-                                                        <Link key={child.label} href={child.href ? child.href : ''} className="text text--standard text--dark-color text--weight-400" data-menu-item>
+                                                        <Link key={child.label} href={child.href ? child.href : '/services'} onClick={closeMenu} className="text text--standard text--dark-color text--weight-400" data-menu-item>
                                                             <span>{child.label}</span>
                                                             <ArrowUpRight />
                                                         </Link>
@@ -303,14 +321,21 @@ export default function Header({
                                                 </div>
                                             </React.Fragment>
                                         ) : (
-                                            <Link key={item.label} href={item.href ? item.href : ''} onClick={switchMenu} className="heading heading--font-1 heading--standard heading--dark-color" data-menu-item>
+                                            <Link key={item.label} href={item.href ? item.href : '/'} onClick={closeMenu} className="heading heading--font-1 heading--standard heading--dark-color" data-menu-item>
                                                 {item.label}
                                             </Link>
                                         )
                                     ))}
                                 </nav>
                                 <div className={styles['main-menu__button']} data-menu-button>
-                                    <Button full="full" background="dark" size="large" color="white">
+                                    <Button
+                                        full="full"
+                                        background="dark"
+                                        size="large"
+                                        color="white"
+                                        data-popup-open="request"
+                                        onClick={() => setIsOpen(false)}
+                                    >
                                         <ArrowUpRight />
                                         Start Your Project
                                     </Button>
@@ -328,6 +353,7 @@ export default function Header({
                                         {email && (
                                             <Link
                                                 href={`mailto:${email}`}
+                                                onClick={closeMenu}
                                                 className={`${styles['get-in-touch__link']} ${styles['get-in-touch__link--mail']} text text--medium text--dark-color text--weight-400`}
                                             >
                                                 {email}
@@ -344,6 +370,7 @@ export default function Header({
                                             <Link
                                                 key={item.number}
                                                 href={`tel:${item.number}`}
+                                                onClick={closeMenu}
                                                 className={`${styles['get-in-touch__link']} text text--medium text--dark-color text--weight-400`}
                                             >
                                                 {item.number}
@@ -361,7 +388,10 @@ export default function Header({
                                         {social.map((item) => (
                                             <Link
                                                 key={item.label}
-                                                href={item.href ? item.href : ''}
+                                                href={item.href ? item.href : '/'}
+                                                target={item.href?.startsWith('http') ? '_blank' : undefined}
+                                                rel={item.href?.startsWith('http') ? 'noreferrer' : undefined}
+                                                onClick={closeMenu}
                                                 className={`${styles['get-in-touch__link']} text text--medium text--dark-color text--weight-400`}
                                             >
                                                 {item.label}

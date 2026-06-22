@@ -16,9 +16,9 @@ export default function Contact() {
             ]}
             email="hello@harbstone.digital"
             social={[
-                {label: 'X (Twitter)', href: '/'},
-                {label: 'Instagram', href: '/'},
-                {label: 'Vimeo', href: '/'},
+                {label: 'X (Twitter)', href: 'https://x.com'},
+                {label: 'Instagram', href: 'https://www.instagram.com'},
+                {label: 'Vimeo', href: 'https://vimeo.com'},
             ]}
             address="Liepājas iela 2 – 80, Rīga, LV-1002"
             cart="https://snazzymaps.com/embed/739735"

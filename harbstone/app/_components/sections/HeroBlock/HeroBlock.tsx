@@ -37,7 +37,7 @@ export default function HeroBlock({
                     full={fullText}
                 />
                 <div className="block__actions">
-                    <Button background="dark" size="large" color="white">
+                    <Button background="dark" size="large" color="white" data-popup-open="request">
                         <ArrowUpRight />
                         Start Your Project
                     </Button>

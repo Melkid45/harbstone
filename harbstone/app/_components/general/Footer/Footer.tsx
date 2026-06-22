@@ -42,15 +42,15 @@ const numbersMain: NumbersArray[] = [
 const socialMain: SocialArray[] = [
     {
         label: 'X (Twitter)',
-        href: '#'
+        href: 'https://x.com'
     },
     {
         label: 'Instagram',
-        href: '#'
+        href: 'https://www.instagram.com'
     },
     {
         label: 'Vimeo',
-        href: '#'
+        href: 'https://vimeo.com'
     },
 ]
 
@@ -60,15 +60,15 @@ const navigationMain = [
         children: [
             {
                 label: 'Web design & UX',
-                href: '/'
+                href: '/services/web-dev#web-design-ux'
             },
             {
                 label: 'Programming',
-                href: '/'
+                href: '/services/web-dev#programming'
             },
             {
                 label: 'SEO / SAO',
-                href: '/'
+                href: '/services/web-dev#seo-sao'
             },
         ]
     },
@@ -77,15 +77,15 @@ const navigationMain = [
         children: [
             {
                 label: 'Pre-production',
-                href: '/'
+                href: '/services/video-production#pre-production'
             },
             {
                 label: 'Production',
-                href: '/'
+                href: '/services/video-production#production'
             },
             {
                 label: 'Post-production',
-                href: '/'
+                href: '/services/video-production#post-production'
             },
         ]
     },
@@ -94,23 +94,23 @@ const navigationMain = [
         children: [
             {
                 label: 'About Us',
-                href: '/'
+                href: '/about'
             },
             {
                 label: 'Services',
-                href: '/'
+                href: '/services'
             },
             {
                 label: 'Works',
-                href: '/'
+                href: '/works'
             },
             {
                 label: 'EU Projects',
-                href: '/'
+                href: '/eu-project'
             },
             {
                 label: 'Contacts',
-                href: '/'
+                href: '/contact'
             },
         ]
     },
@@ -132,7 +132,7 @@ export default function Footer({
                                 <Image src={Logo} alt="Footer Logo" />
                             </Link>
                             <div className={styles['footer-main__policy']}>
-                                <Link href={'/'} className="text text--small text--white-color">
+                                <Link href={'/privacy-policy'} className="text text--small text--white-color">
                                     Privacy Policy
                                 </Link>
                                 <p className="text text--small text--white-color">
@@ -184,7 +184,9 @@ export default function Footer({
                                     {social.map((item) => (
                                         <Link
                                             key={item.label}
-                                            href={item.href ? item.href : ''}
+                                            href={item.href ? item.href : '/'}
+                                            target={item.href?.startsWith('http') ? '_blank' : undefined}
+                                            rel={item.href?.startsWith('http') ? 'noreferrer' : undefined}
                                             className={`${styles['get-in-touch__link']} text text--medium text--white-color text--weight-400`}
                                         >
                                             {item.label}
@@ -210,8 +212,8 @@ export default function Footer({
                                     {item.children?.map((item) => (
                                         <Link
                                             key={item.label}
-                                            href={item.href ? item.href : ''}
-                                            className={`${styles['footer-nav__link ']} text text--small text--white-color`}
+                                            href={item.href ? item.href : '/'}
+                                            className={`${styles['footer-nav__link']} text text--small text--white-color`}
                                         >
                                             {item.label}
                                         </Link>

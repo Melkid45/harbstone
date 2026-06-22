@@ -1,11 +1,6 @@
 import AboutBlock from "@/app/_components/sections/AboutBlock/AboutBlock";
 import ServicesBlock from "@/app/_components/sections/ServicesBlock/ServicesBlock";
 import WorksBlock from "@/app/_components/sections/WorksBlock/WorksBlock";
-import Works1 from '@/app/assets/images/services/1.webp'
-import Works2 from '@/app/assets/images/services/2.webp'
-import Services1 from '@/app/assets/images/services/1.webp';
-import Services2 from '@/app/assets/images/services/2.webp';
-import Services3 from '@/app/assets/images/services/3.webp';
 import TeamBlock from "@/app/_components/sections/TeamBlock/TeamBlock";
 import Team1 from '@/app/assets/images/team/1.jpg';
 import Team2 from '@/app/assets/images/team/2.jpg';
@@ -26,6 +21,8 @@ import Founder from '@/app/assets/images/founder.jpg';
 import InformationBlock from "@/app/_components/sections/InformationBlock/InformationBlock";
 import ReelsBlock from "@/app/_components/sections/ReelsBlock/ReelsBlock";
 import TimeLineBlock from "@/app/_components/sections/TimeLineBlock/TimeLineBlock";
+import { categories as workCategories, works } from "../works/works";
+import { services } from "../services/services";
 const pointsArray = [
     {
         title: '10+',
@@ -40,100 +37,6 @@ const pointsArray = [
         description: 'long-term partnerships'
     },
 ]
-const worksArray = [
-    {
-        name: 'Mickey Rourke x MelBet',
-        preview: Works1,
-        description: 'A full-scale commercial campaign featuring Mickey Rourke, delivered end-to-end from concept to final cut.',
-        href: '/',
-        video: '/videos/1.webm',
-    },
-    {
-        name: 'Pasha Technique x MelBet',
-        preview: Works2,
-        description: 'New work by Technice',
-        href: '/',
-        video: '/videos/1.webm',
-    },
-]
-const servicesArray = [
-    {
-        name: 'Web Dev',
-        description: 'Complex digital systems, from CRMs and apps to full-scale platforms, built in-house to solve real business needs.',
-        preview: Services1,
-        video: '/videos/1.webm',
-        href: '/',
-        children: [
-            {
-                name: 'Web Design & UX',
-                href: '/'
-            },
-            {
-                name: 'Programming',
-                href: '/'
-            },
-            {
-                name: 'Digital strategy',
-                href: '/'
-            },
-            {
-                name: 'SEO / SAO',
-                href: '/'
-            },
-        ]
-    },
-    {
-        name: 'Video Production',
-        description: 'Concept, production, editing and VFX proven in projects with international companies and world-class celebrities.',
-        preview: Services2,
-        video: '/videos/2.webm',
-        href: '/',
-        children: [
-            {
-                name: 'Pre-production',
-                href: '/'
-            },
-            {
-                name: 'Production',
-                href: '/'
-            },
-            {
-                name: 'Post-production',
-                href: '/'
-            },
-            {
-                name: 'VFX',
-                href: '/'
-            },
-        ]
-    },
-    {
-        name: 'Viral Promotion',
-        description: 'Content and campaigns designed to attract attention, spread across platforms, and turn reach into real interest.',
-        preview: Services3,
-        video: '/videos/3.webm',
-        href: '/',
-        children: [
-            {
-                name: 'Branding & Identity',
-                href: '/'
-            },
-            {
-                name: 'Design & Illustration',
-                href: '/'
-            },
-            {
-                name: 'SMM / SMO',
-                href: '/'
-            },
-            {
-                name: 'Marketing & Campaigns',
-                href: '/'
-            },
-        ]
-    },
-]
-
 const howArray = [
     {
         title: 'Start with listening.',
@@ -286,22 +189,13 @@ export default function About() {
                 title="Services"
                 dark={true}
                 description="Our services are limited to what we do best, and that’s exactly why they work."
-                services={servicesArray}
+                services={services}
             />
             <WorksBlock
                 title="Works"
                 description="Why waste words describing what we’re capable of, when every project already shows the story better than we ever could."
-                categories={[
-                    {
-                        label: 'Web Dev',
-                        href: '/'
-                    },
-                    {
-                        label: 'Video Production',
-                        href: '/'
-                    },
-                ]}
-                works={worksArray}
+                categories={workCategories}
+                works={works.slice(0, 2)}
                 padding="y"
             />
         </>

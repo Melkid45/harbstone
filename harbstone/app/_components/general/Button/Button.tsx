@@ -135,7 +135,7 @@ export default function Button({
 
     return (
         isLink ? (
-            <Link href={href ? href : ''} className={className} {...accessibilityProps} {...props as Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'color' | 'href'>}>
+            <Link href={href ? href : '/'} className={className} {...accessibilityProps} {...props as Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'color' | 'href'>}>
                 {renderButtonChildren(children)}
             </Link>
         ) : (
