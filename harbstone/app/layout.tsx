@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import '@splidejs/react-splide/css';
 import './global.scss';
 import Header from "./_components/general/Header/Header";
+import LenisRecovery from "./_components/general/LenisRecovery/LenisRecovery";
 import LenisRouteSync from "./_components/general/LenisRouteSync/LenisRouteSync";
 import PageUnder from "./_components/general/PageUnder/PageUnder";
 import PopupBlock from "./_components/general/PopupBlock/PopupBlock";
@@ -35,6 +36,7 @@ export default function RootLayout({
     >
       <body className="min-h-full is-preloading">
         <ReactLenis root />
+        <LenisRecovery />
         <Suspense fallback={null}>
           <LenisRouteSync />
         </Suspense>

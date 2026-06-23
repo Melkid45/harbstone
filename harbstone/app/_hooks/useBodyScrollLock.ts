@@ -29,6 +29,7 @@ function lockScroll(lenis: LockableLenis | null) {
     previousBodyOverflow = document.body.style.overflow;
     previousHtmlOverflow = document.documentElement.style.overflow;
 
+    document.documentElement.dataset.scrollLocked = 'true';
     document.documentElement.style.overflow = 'hidden';
     document.body.style.overflow = 'hidden';
 }
@@ -42,6 +43,7 @@ function unlockScroll() {
 
     document.documentElement.style.overflow = previousHtmlOverflow;
     document.body.style.overflow = previousBodyOverflow;
+    delete document.documentElement.dataset.scrollLocked;
     lockedLenis?.start();
     lockedLenis?.resize?.();
     lockedLenis = null;
