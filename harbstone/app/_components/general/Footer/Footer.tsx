@@ -1,23 +1,29 @@
+'use client';
+
 import Link from "next/link";
 import BlockWrapper from "../block/BlockWrapper/BlockWrapper";
 import Logo from '@/app/assets/images/logo.svg';
 import Image from "next/image";
 import styles from './Footer.module.scss';
 import Container from "../Container/Container";
+import { useI18n } from "@/app/_i18n/LocaleProvider";
 interface FooterProps {
     email?: string;
     numbers?: NumbersArray[];
     social?: SocialArray[];
     navigation?: NavigationArray[];
+    categories?: FooterNavigationGroup[];
 }
 
-interface NavigationArray {
+export interface FooterNavigationGroup {
     label: string;
     children?: {
         label: string;
         href?: string;
     }[];
 }
+
+type NavigationArray = FooterNavigationGroup;
 
 interface NumbersArray {
     number: string;
@@ -60,15 +66,15 @@ const navigationMain = [
         children: [
             {
                 label: 'Web design & UX',
-                href: '/services/web-dev#web-design-ux'
+                href: '/works?service=web-dev&soft=web-design-and-ux'
             },
             {
                 label: 'Programming',
-                href: '/services/web-dev#programming'
+                href: '/works?service=web-dev&soft=programming'
             },
             {
                 label: 'SEO / SAO',
-                href: '/services/web-dev#seo-sao'
+                href: '/works?service=web-dev&soft=seo-sao'
             },
         ]
     },
@@ -77,15 +83,15 @@ const navigationMain = [
         children: [
             {
                 label: 'Pre-production',
-                href: '/services/video-production#pre-production'
+                href: '/works?service=video-production&soft=pre-production'
             },
             {
                 label: 'Production',
-                href: '/services/video-production#production'
+                href: '/works?service=video-production&soft=production'
             },
             {
                 label: 'Post-production',
-                href: '/services/video-production#post-production'
+                href: '/works?service=video-production&soft=post-production'
             },
         ]
     },
@@ -120,20 +126,38 @@ export default function Footer({
     social = socialMain,
     email = emailMain,
     numbers = numbersMain,
-    navigation = navigationMain
+    navigation,
+    categories,
 }: FooterProps) {
+    const { localizedHref, translations: t } = useI18n();
+    const serviceCategories = categories?.length
+        ? categories
+        : [navigationMain[0], navigationMain[1]];
+    const localizedNavigation = navigation || [
+        ...serviceCategories,
+        {
+            label: t.nav.company,
+            children: [
+                { label: t.nav.about, href: '/about' },
+                { label: t.nav.services, href: '/services' },
+                { label: t.nav.works, href: '/works' },
+                { label: t.nav.euProjects, href: '/eu-project' },
+                { label: t.nav.contacts, href: '/contact' },
+            ],
+        },
+    ];
     return (
         <footer>
             <BlockWrapper padding="pb" background="dark">
                 <div className={styles['footer-main']}>
                     <div className={styles['footer-main__body']}>
                         <div className={styles['footer-main__content']}>
-                            <Link className={styles.logo} href={'/'}>
+                            <Link className={styles.logo} href={localizedHref('/')}>
                                 <Image src={Logo} alt="Footer Logo" />
                             </Link>
                             <div className={styles['footer-main__policy']}>
-                                <Link href={'/privacy-policy'} className="text text--small text--white-color">
-                                    Privacy Policy
+                                <Link href={localizedHref('/privacy-policy')} className="text text--small text--white-color">
+                                    {t.common.privacyPolicy}
                                 </Link>
                                 <p className="text text--small text--white-color">
                                     © 2016-2026 Harbstone Digital SIA.
@@ -146,7 +170,7 @@ export default function Footer({
                                     <p
                                         className={`${styles['get-in-touch__label']} text text--medium text--white-color text--weight-400`}
                                     >
-                                        Work mail:
+                                        {t.common.workMail}
                                     </p>
                                     {email && (
                                         <Link
@@ -161,7 +185,7 @@ export default function Footer({
                                     <p
                                         className={`${styles['get-in-touch__label']} text text--medium text--white-color text--weight-400`}
                                     >
-                                        Numbers:
+                                        {t.common.numbers}
                                     </p>
                                     {numbers.map((item) => (
                                         <Link
@@ -179,12 +203,12 @@ export default function Footer({
                                     <p
                                         className={`${styles['get-in-touch__label']} text text--medium text--white-color text--weight-400`}
                                     >
-                                        Socials:
+                                        {t.common.socials}
                                     </p>
                                     {social.map((item) => (
                                         <Link
                                             key={item.label}
-                                            href={item.href ? item.href : '/'}
+                                            href={localizedHref(item.href ? item.href : '/')}
                                             target={item.href?.startsWith('http') ? '_blank' : undefined}
                                             rel={item.href?.startsWith('http') ? 'noreferrer' : undefined}
                                             className={`${styles['get-in-touch__link']} text text--medium text--white-color text--weight-400`}
@@ -201,7 +225,7 @@ export default function Footer({
             <section className={styles['footer-nav']}>
                 <Container>
                     <div className={styles['footer-nav__body']}>
-                        {navigation.map((item) => (
+                        {localizedNavigation.map((item) => (
                             <div key={item.label} className={styles['footer-nav__group']}>
                                 <h3
                                     className={`${styles['footer-nav__title']} text text--medium text--white-color`}
@@ -212,7 +236,7 @@ export default function Footer({
                                     {item.children?.map((item) => (
                                         <Link
                                             key={item.label}
-                                            href={item.href ? item.href : '/'}
+                                            href={localizedHref(item.href ? item.href : '/')}
                                             className={`${styles['footer-nav__link']} text text--small text--white-color`}
                                         >
                                             {item.label}

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import ClientsBlock from "./_components/sections/ClientsBlock/ClientsBlock";
 import HeroBlock from "./_components/sections/HeroBlock/HeroBlock";
 import ShowreelBlock from "./_components/sections/ShowreelBlock/ShowreelBlock";
@@ -17,6 +18,17 @@ import ServicesBlock from "./_components/sections/ServicesBlock/ServicesBlock";
 import WorksBlock from "./_components/sections/WorksBlock/WorksBlock";
 import { services } from "./(public)/services/services";
 import { categories as workCategories, works } from "./(public)/works/works";
+import CmsPage from "./_components/general/CmsPage/CmsPage";
+import { getPageBySlug } from "./_lib/strapi";
+import { getPageMetadata } from "./_lib/pageMetadata";
+import { getRequestLocale } from "./_i18n/server";
+
+interface HomePageProps {
+  searchParams: Promise<{
+    locale?: string | string[];
+  }>;
+}
+
 const clientsArray = [
   {
     name: 'Primer',
@@ -86,7 +98,7 @@ const TogetherArray = [
   },
 ]
 
-export default function Home() {
+function StaticHome() {
   return (
     <>
       <HeroBlock
@@ -125,4 +137,24 @@ export default function Home() {
       />
     </>
   );
+}
+
+export async function generateMetadata({
+  searchParams
+}: HomePageProps): Promise<Metadata> {
+  const params = await searchParams;
+  const page = await getPageBySlug('home', await getRequestLocale(params.locale));
+
+  return page ? getPageMetadata(page) : {};
+}
+
+export default async function Home({
+  searchParams
+}: HomePageProps) {
+  const params = await searchParams;
+  const page = await getPageBySlug('home', await getRequestLocale(params.locale));
+
+  return page?.blocks?.length
+    ? <CmsPage page={page} />
+    : <StaticHome />;
 }

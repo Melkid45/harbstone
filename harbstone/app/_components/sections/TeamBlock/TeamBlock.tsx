@@ -31,6 +31,10 @@ const splideOptions = {
 export default function TeamBlock({
     members
 }: TeamBlockProps) {
+    if (!members.length) {
+        return null;
+    }
+
     return (
         <BlockWrapper padding="y" background="white">
             <Splide options={splideOptions} aria-label="Team Gallery" className={styles['team-splide']}>

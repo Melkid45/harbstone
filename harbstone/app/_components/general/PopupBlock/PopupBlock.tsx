@@ -7,8 +7,14 @@ import RequestForm from "../../sections/RequestBlock/RequestForm";
 import { requestInputs, requestPricing } from "@/app/_data/requestForm";
 import useBodyScrollLock from "@/app/_hooks/useBodyScrollLock";
 import styles from './PopupBlock.module.scss';
+import { useI18n } from "@/app/_i18n/LocaleProvider";
 
 export default function PopupBlock() {
+    const { translations: t } = useI18n();
+    const localizedInputs = requestInputs.map((input) => ({
+        ...input,
+        placeholder: t.form[input.name as 'name' | 'email' | 'phone' | 'message'],
+    }));
     const [isOpen, setIsOpen] = useState(false);
     const pathname = usePathname();
     useBodyScrollLock(isOpen);
@@ -77,19 +83,19 @@ export default function PopupBlock() {
                         id="request-popup-title"
                         className="heading heading--font-1 heading--medium heading--dark-color"
                     >
-                        Have an idea? We can help!
+                        {t.form.popupTitle}
                     </h3>
                     <button
                         type="button"
                         className={styles.popup__close}
-                        aria-label="Close request form"
+                        aria-label={t.form.closeForm}
                         onClick={() => setIsOpen(false)}
                     >
                         <X />
                     </button>
                 </div>
                 <RequestForm
-                    inputs={requestInputs}
+                    inputs={localizedInputs}
                     pricing={requestPricing}
                     variant="popup"
                 />

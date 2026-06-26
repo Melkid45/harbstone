@@ -7,6 +7,7 @@ import BlockWrapper from "../../general/block/BlockWrapper/BlockWrapper";
 import BlockTitle from "../../general/block/BlockTitle/BlockTitle";
 import styles from './ServicesBlock.module.scss';
 import Button from "../../general/Button/Button";
+import { useI18n } from "@/app/_i18n/LocaleProvider";
 
 interface ServicesBlockProps {
     title?: string;
@@ -32,6 +33,7 @@ export default function ServicesBlock({
     dark = false,
     services
 }: ServicesBlockProps) {
+    const { localizedHref } = useI18n();
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const videoRefs = useRef<Array<HTMLVideoElement | null>>([]);
 
@@ -108,7 +110,7 @@ export default function ServicesBlock({
                         <div className={styles.services__content}>
                             <div className={styles.services__description}>
                                 {item.href ? (
-                                    <Link href={item.href} className={`heading heading--small heading--font-2 heading--weight-600 ${dark ? 'heading--white-color' : 'heading--dark-color'}`}>
+                                    <Link href={localizedHref(item.href)} className={`heading heading--small heading--font-2 heading--weight-600 ${dark ? 'heading--white-color' : 'heading--dark-color'}`}>
                                         {item.name}
                                     </Link>
                                 ) : (

@@ -1,8 +1,17 @@
+import type { Metadata } from "next";
 import ContactsBlock from "@/app/_components/sections/ContactsBlock/ContactsBlock";
+import CmsPage from "@/app/_components/general/CmsPage/CmsPage";
+import { getPageBySlug } from "@/app/_lib/strapi";
+import { getPageMetadata } from "@/app/_lib/pageMetadata";
+import { getRequestLocale } from "@/app/_i18n/server";
 
+interface ContactPageProps {
+    searchParams: Promise<{
+        locale?: string | string[];
+    }>;
+}
 
-
-export default function Contact() {
+function StaticContact() {
     return (
         <ContactsBlock
             title="Contacts"
@@ -24,4 +33,24 @@ export default function Contact() {
             cart="https://snazzymaps.com/embed/739735"
         />
     )
+}
+
+export async function generateMetadata({
+    searchParams,
+}: ContactPageProps): Promise<Metadata> {
+    const params = await searchParams;
+    const page = await getPageBySlug('contact', await getRequestLocale(params.locale));
+
+    return page ? getPageMetadata(page) : {};
+}
+
+export default async function Contact({
+    searchParams,
+}: ContactPageProps) {
+    const params = await searchParams;
+    const page = await getPageBySlug('contact', await getRequestLocale(params.locale));
+
+    return page?.blocks?.length
+        ? <CmsPage page={page} />
+        : <StaticContact />;
 }

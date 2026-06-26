@@ -9,6 +9,7 @@ import { ArrowUpRight } from "lucide-react";
 import styles from './WorksBlock.module.scss';
 import Button from "../../general/Button/Button";
 import Breadcrumbs from "../../general/Breadcrumbs/Breadcrumbs";
+import { useI18n } from "@/app/_i18n/LocaleProvider";
 interface WorksBlockProps {
     title: string;
     description?: string;
@@ -21,6 +22,7 @@ interface WorksBlockProps {
         service?: string;
         soft?: string;
     };
+    emptyMessage?: string;
     categories?: {
         label: string;
         href: string;
@@ -33,14 +35,15 @@ interface WorksBlockProps {
     }[];
     works: {
         preview: string | StaticImageData;
-        video: string;
+        video?: string;
         name: string;
+        slug?: string;
         href: string;
         description: string;
         celebritie?: string;
         industry?: string;
         project_link?: string;
-        service?: string;
+        services?: string[];
         soft?: string[];
     }[];
 }
@@ -87,13 +90,15 @@ export default function WorksBlock({
     noMore = true,
     number = false,
     filtered = false,
-    activeFilter
+    activeFilter,
+    emptyMessage,
 }: WorksBlockProps) {
+    const { localizedHref, translations: t } = useI18n();
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const videoRefs = useRef<Array<HTMLVideoElement | null>>([]);
-    const softCategories = categories?.filter((item) => (
-        !activeFilter?.service || item.slug === activeFilter.service
-    ));
+    const activeCategory = categories?.find((item) => (
+        item.slug === activeFilter?.service
+    )) || categories?.[0];
     const worksAnimationKey = filtered
         ? `${activeFilter?.service || 'all'}-${activeFilter?.soft || 'all'}-${works.map((work) => work.href).join('|')}`
         : 'static';
@@ -147,8 +152,8 @@ export default function WorksBlock({
                 <Breadcrumbs
                     type="dark"
                     breadcrumbs={[
-                        { label: 'Main', href: '/' },
-                        { label: 'Works' },
+                        { label: t.common.main, href: '/' },
+                        { label: t.nav.works },
                     ]}
                 />
             )}
@@ -160,18 +165,16 @@ export default function WorksBlock({
                 {filtered ? (
                     <>
                         <div className="block__nav">
-                            <Link
-                                href="/works"
-                                className={`text text--standard text--dark-color text--weight-400`}
-                                scroll={false}
-                            >
-                                All works
-                            </Link>
                             {categories?.map((item) => (
                                 <Link
                                     key={item.label}
-                                    href={normalizeHref(item.href, item.slug || slugify(item.label))}
-                                    className={`text text--standard text--dark-color text--weight-400`}
+                                    href={localizedHref(normalizeHref(item.href, item.slug || slugify(item.label)))}
+                                    className={`
+                                        ${styles.works__category}
+                                        ${item.slug === activeCategory?.slug ? styles['works__category--active'] : ''}
+                                        text text--standard text--dark-color text--weight-400
+                                    `}
+                                    aria-current={item.slug === activeCategory?.slug ? 'page' : undefined}
                                     scroll={false}
                                 >
                                     {item.label}
@@ -179,14 +182,27 @@ export default function WorksBlock({
                             ))}
                         </div>
                         <div className="block__actions">
-                            {softCategories?.map((item) => (
-                                item.children?.map((child, index) => (
+                            {activeCategory ? (
+                                <Button
+                                    isLink={true}
+                                    href={normalizeHref(
+                                        activeCategory.href,
+                                        activeCategory.slug || slugify(activeCategory.label),
+                                    )}
+                                    size="large"
+                                    background={!activeFilter?.soft ? 'dark' : 'light'}
+                                    color={!activeFilter?.soft ? 'white' : 'dark'}
+                                >
+                                    {t.common.allWorks}
+                                </Button>
+                            ) : null}
+                            {activeCategory?.children?.map((child, index) => (
                                     <Button
-                                        key={`${item.label}-${child.label}-${index}`}
+                                        key={`${activeCategory.label}-${child.label}-${index}`}
                                         isLink={true}
                                         href={normalizeHref(
                                             child.href,
-                                            item.slug || slugify(item.label),
+                                            activeCategory.slug || slugify(activeCategory.label),
                                             child.slug || slugify(child.label),
                                         )}
                                         size="large"
@@ -195,7 +211,6 @@ export default function WorksBlock({
                                     >
                                         {child.label}
                                     </Button>
-                                ))
                             ))}
                         </div>
                     </>
@@ -205,7 +220,7 @@ export default function WorksBlock({
                             {categories.map((item) => (
                                 <Link
                                     key={item.label}
-                                    href={normalizeHref(item.href, item.slug || slugify(item.label))}
+                                    href={localizedHref(normalizeHref(item.href, item.slug || slugify(item.label)))}
                                     className="text text--standard text--dark-color text--weight-500"
                                 >
                                     {item.label}
@@ -217,10 +232,15 @@ export default function WorksBlock({
 
             </div>
             <div key={worksAnimationKey} className={styles.works}>
+                {!works.length ? (
+                    <p className={`${styles.works__empty} text text--medium text--dark-color`}>
+                        {emptyMessage || t.common.noWorks}
+                    </p>
+                ) : null}
                 {works.map((item, index) => (
                     <Link
-                        key={item.name}
-                        href={item.href}
+                        key={item.slug || item.name}
+                        href={localizedHref(item.href)}
                         style={{ '--work-index': index } as CSSProperties}
                         className={`
                             ${styles.works__item}
@@ -239,19 +259,21 @@ export default function WorksBlock({
                                 fill
                                 sizes="(max-width: 1000px) 100vw, 50vw"
                             />
-                            <video
-                                ref={(node) => {
-                                    videoRefs.current[index] = node;
-                                }}
-                                className={styles.works__video}
-                                preload="metadata"
-                                playsInline
-                                loop
-                                muted
-                                aria-hidden="true"
-                            >
-                                <source src={item.video} type="video/webm" />
-                            </video>
+                            {item.video ? (
+                                <video
+                                    ref={(node) => {
+                                        videoRefs.current[index] = node;
+                                    }}
+                                    className={styles.works__video}
+                                    preload="metadata"
+                                    playsInline
+                                    loop
+                                    muted
+                                    aria-hidden="true"
+                                >
+                                    <source src={item.video} type="video/webm" />
+                                </video>
+                            ) : null}
                         </div>
                         <div className={styles.works__info}>
                             <h3
@@ -265,12 +287,12 @@ export default function WorksBlock({
                         </div>
                     </Link>
                 ))}
-                {noMore && (
+                {noMore && works.length > 0 ? (
                     <Button isLink={true} href="/works" customClass={styles.works__more} background="white" border="dark" size="large" color="dark" place="centered">
                         <ArrowUpRight />
-                        See all works
+                        {t.common.seeAllWorks}
                     </Button>
-                )}
+                ) : null}
             </div>
         </BlockWrapper>
     )

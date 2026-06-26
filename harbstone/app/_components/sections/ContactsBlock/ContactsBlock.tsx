@@ -1,3 +1,5 @@
+'use client';
+
 import Link from "next/link";
 import BlockTitle from "../../general/block/BlockTitle/BlockTitle";
 import BlockWrapper from "../../general/block/BlockWrapper/BlockWrapper";
@@ -5,6 +7,8 @@ import Breadcrumbs from "../../general/Breadcrumbs/Breadcrumbs";
 import styles from './ContactsBlock.module.scss';
 import Button from "../../general/Button/Button";
 import { ArrowUpRight } from "lucide-react";
+import { useI18n } from "@/app/_i18n/LocaleProvider";
+
 interface ContactsBlockProps {
     title: string;
     breadcrumbs: {
@@ -33,6 +37,8 @@ export default function ContactsBlock({
     title,
     breadcrumbs
 }: ContactsBlockProps) {
+    const { translations: t } = useI18n();
+
     return (
         <BlockWrapper background="white" padding="pb" number={true}>
             <Breadcrumbs
@@ -51,7 +57,7 @@ export default function ContactsBlock({
                                     <p
                                         className={`${styles['get-in-touch__label']} text text--medium text--dark-color text--weight-400`}
                                     >
-                                        Work mail:
+                                        {t.common.workMail}
                                     </p>
                                     <Link
                                         href={`mailto:${email}`}
@@ -64,7 +70,7 @@ export default function ContactsBlock({
                                     <p
                                         className={`${styles['get-in-touch__label']} text text--medium text--dark-color text--weight-400`}
                                     >
-                                        Numbers:
+                                        {t.common.numbers}
                                     </p>
                                     {numbers?.map((item) => (
                                         <Link
@@ -77,30 +83,33 @@ export default function ContactsBlock({
                                     ))}
                                 </div>
                             </div>
-                            <div className={styles['get-in-touch__block']}>
-                                <div className={styles['get-in-touch__item']}>
-                                    <p
-                                        className={`${styles['get-in-touch__label']} text text--medium text--dark-color text--weight-400`}
-                                    >
-                                        Socials:
-                                    </p>
-                                    {social.map((item) => (
-                                        <Link
-                                            key={item.label}
-                                            href={item.href}
-                                            target={item.href.startsWith('http') ? '_blank' : undefined}
-                                            rel={item.href.startsWith('http') ? 'noreferrer' : undefined}
-                                            className={`${styles['get-in-touch__link']} text text--medium text--dark-color text--weight-400`}
+                            {social && (
+                                <div className={styles['get-in-touch__block']}>
+
+                                    <div className={styles['get-in-touch__item']}>
+                                        <p
+                                            className={`${styles['get-in-touch__label']} text text--medium text--dark-color text--weight-400`}
                                         >
-                                            {item.label}
-                                        </Link>
-                                    ))}
+                                            {t.common.socials}
+                                        </p>
+                                        {social.map((item) => (
+                                            <Link
+                                                key={item.label}
+                                                href={item.href}
+                                                target={item.href.startsWith('http') ? '_blank' : undefined}
+                                                rel={item.href.startsWith('http') ? 'noreferrer' : undefined}
+                                                className={`${styles['get-in-touch__link']} text text--medium text--dark-color text--weight-400`}
+                                            >
+                                                {item.label}
+                                            </Link>
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
+                            )}
                         </div>
                         <Button size="large" color="white" background="dark" data-popup-open="request">
-                            <ArrowUpRight/>
-                            Start Your Project
+                            <ArrowUpRight />
+                            {t.common.startProject}
                         </Button>
                     </div>
 
@@ -109,7 +118,7 @@ export default function ContactsBlock({
                             <span
                                 className={`${styles['get-in-touch__label']} text text--medium text--dark-color text--weight-400`}
                             >
-                                Address:
+                                {t.common.address}
                             </span>
 
                             <Link

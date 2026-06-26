@@ -1,8 +1,11 @@
+'use client';
+
 import BlockWrapper from "@/app/_components/general/block/BlockWrapper/BlockWrapper";
 import Breadcrumbs from "@/app/_components/general/Breadcrumbs/Breadcrumbs";
 import Link from "next/link";
 import styles from './WorkHeroBlock.module.scss';
 import Button from "@/app/_components/general/Button/Button";
+import { useI18n } from "@/app/_i18n/LocaleProvider";
 
 interface WorkHeroBlockProps {
     title: string;
@@ -27,13 +30,15 @@ export default function WorkHeroBlock({
     categories,
     celebritie
 }: WorkHeroBlockProps) {
+    const { translations: t } = useI18n();
+
     return (
         <BlockWrapper background="white" padding="none" number={true}>
             <Breadcrumbs
                 type="dark"
                 breadcrumbs={[
-                    { label: 'Main', href: '/' },
-                    { label: 'Works', href: '/works' },
+                    { label: t.common.main, href: '/' },
+                    { label: t.nav.works, href: '/works' },
                     { label: title },
                 ]}
             />
@@ -53,7 +58,7 @@ export default function WorkHeroBlock({
                         {industry && (
                             <div className={styles['work-hero__meta-item']}>
                                 <p className={`${styles['work-hero__meta-label']} text text--small text--dark-color text--weight-400`}>
-                                    Industry:
+                                    {t.work.industry}
                                 </p>
                                 <span className={`${styles['work-hero__meta-value']} text text--medium text--dark-color text--weight-500`}>
                                     {industry}
@@ -63,31 +68,31 @@ export default function WorkHeroBlock({
                         {celebritie && (
                             <div className={styles['work-hero__meta-item']}>
                                 <p className={`${styles['work-hero__meta-label']} text text--small text--dark-color text--weight-400`}>
-                                    Celebrity:
+                                    {t.work.celebrity}
                                 </p>
                                 <span className={`${styles['work-hero__meta-value']} text text--medium text--dark-color text--weight-500`}>
                                     {celebritie}
                                 </span>
                             </div>
                         )}
-                        {project_link && project_link_type && (
+                        {project_link && (
                             <div className={styles['work-hero__meta-item']}>
                                 <p className={`${styles['work-hero__meta-label']} text text--small text--dark-color text--weight-400`}>
-                                    Project link:
+                                    {t.work.projectLink}
                                 </p>
                                 <Link target="_blank" className={`${styles['work-hero__meta-link']} text text--medium text--dark-color text--weight-500`} href={project_link}>
-                                    {project_link_type}
+                                    {project_link_type || t.work.viewProject}
                                 </Link>
                             </div>
                         )}
                         {categories && (
                             <div className={`${styles['work-hero__meta-item']} ${styles['work-hero__meta-item--wide']}`}>
                                 <p className={`${styles['work-hero__meta-label']} text text--small text--dark-color text--weight-400`}>
-                                    Services:
+                                    {t.work.services}
                                 </p>
                                 <div className={styles['work-hero__tags']}>
                                     {categories.map((item) => (
-                                        <Button key={item.label} isLink={true} href={item.href ? item.href : '/works'} customClass={styles['work-hero__tag']} size="large" background="light" color="dark">
+                                        <Button key={`${item.label}-${item.href || ''}`} isLink={true} href={item.href ? item.href : '/works'} customClass={styles['work-hero__tag']} size="large" background="light" color="dark">
                                             {item.label}
                                         </Button>
                                     ))}

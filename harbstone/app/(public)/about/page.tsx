@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import AboutBlock from "@/app/_components/sections/AboutBlock/AboutBlock";
 import ServicesBlock from "@/app/_components/sections/ServicesBlock/ServicesBlock";
 import WorksBlock from "@/app/_components/sections/WorksBlock/WorksBlock";
@@ -23,6 +24,17 @@ import ReelsBlock from "@/app/_components/sections/ReelsBlock/ReelsBlock";
 import TimeLineBlock from "@/app/_components/sections/TimeLineBlock/TimeLineBlock";
 import { categories as workCategories, works } from "../works/works";
 import { services } from "../services/services";
+import CmsPage from "@/app/_components/general/CmsPage/CmsPage";
+import { getPageBySlug } from "@/app/_lib/strapi";
+import { getPageMetadata } from "@/app/_lib/pageMetadata";
+import { getRequestLocale } from "@/app/_i18n/server";
+
+interface AboutPageProps {
+    searchParams: Promise<{
+        locale?: string | string[];
+    }>;
+}
+
 const pointsArray = [
     {
         title: '10+',
@@ -138,7 +150,7 @@ const timelineArray = [
     },
 ]
 
-export default function About() {
+function StaticAbout() {
     return (
         <>
             <AboutBlock
@@ -200,4 +212,24 @@ export default function About() {
             />
         </>
     )
+}
+
+export async function generateMetadata({
+    searchParams
+}: AboutPageProps): Promise<Metadata> {
+    const params = await searchParams;
+    const page = await getPageBySlug('about', await getRequestLocale(params.locale));
+
+    return page ? getPageMetadata(page) : {};
+}
+
+export default async function About({
+    searchParams
+}: AboutPageProps) {
+    const params = await searchParams;
+    const page = await getPageBySlug('about', await getRequestLocale(params.locale));
+
+    return page?.blocks?.length
+        ? <CmsPage page={page} />
+        : <StaticAbout />;
 }

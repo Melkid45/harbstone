@@ -1,8 +1,19 @@
+import type { Metadata } from "next";
 import EUBlock from "@/app/_components/sections/EUBlock/EUBlock";
 import HeroBlock from "@/app/_components/sections/HeroBlock/HeroBlock";
+import CmsPage from "@/app/_components/general/CmsPage/CmsPage";
+import { getPageBySlug } from "@/app/_lib/strapi";
+import { getPageMetadata } from "@/app/_lib/pageMetadata";
+import { getRequestLocale } from "@/app/_i18n/server";
 import Eu1 from '@/app/assets/images/eu/1.png';
 import Eu2 from '@/app/assets/images/eu/2.png';
 import Eu3 from '@/app/assets/images/eu/3.png';
+
+interface EuProjectPageProps {
+    searchParams: Promise<{
+        locale?: string | string[];
+    }>;
+}
 
 const euArray = [
     {
@@ -22,7 +33,7 @@ const euArray = [
     },
 ]
 
-export default function Euproject() {
+function StaticEuProject() {
     return (
         <>
             <HeroBlock
@@ -40,4 +51,24 @@ export default function Euproject() {
             />
         </>
     )
+}
+
+export async function generateMetadata({
+    searchParams,
+}: EuProjectPageProps): Promise<Metadata> {
+    const params = await searchParams;
+    const page = await getPageBySlug('eu-project', await getRequestLocale(params.locale));
+
+    return page ? getPageMetadata(page) : {};
+}
+
+export default async function EuProject({
+    searchParams,
+}: EuProjectPageProps) {
+    const params = await searchParams;
+    const page = await getPageBySlug('eu-project', await getRequestLocale(params.locale));
+
+    return page?.blocks?.length
+        ? <CmsPage page={page} />
+        : <StaticEuProject />;
 }

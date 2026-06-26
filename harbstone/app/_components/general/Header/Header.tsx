@@ -5,13 +5,15 @@ import Image from "next/image";
 import React, { CSSProperties, useEffect, useRef, useState } from "react";
 import Logo from '@/app/assets/images/logo.svg';
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useLenis } from "lenis/react";
 import styles from './Header.module.scss';
 import Container from "../Container/Container";
 import Button from "../Button/Button";
 import gsap from "gsap";
 import useBodyScrollLock from "@/app/_hooks/useBodyScrollLock";
+import { locales } from "@/app/_i18n/config";
+import { useI18n } from "@/app/_i18n/LocaleProvider";
 
 interface HeaderProps {
     navigation?: NavigationArray[];
@@ -41,41 +43,6 @@ interface SocialArray {
 interface LanguageItem {
     name: string;
 }
-const NavigationMenu: NavigationArray[] = [
-    {
-        label: 'Works',
-        href: '/works'
-    },
-    {
-        label: 'Services',
-        children: [
-            {
-                label: 'Web Dev',
-                href: '/services/web-dev'
-            },
-            {
-                label: 'Video Production',
-                href: '/services/video-production'
-            },
-            {
-                label: 'Content & Promotion',
-                href: '/services/viral-promotion'
-            },
-        ]
-    },
-    {
-        label: 'About Us',
-        href: '/about'
-    },
-    {
-        label: 'EU projects',
-        href: '/eu-project'
-    },
-    {
-        label: 'Contacts',
-        href: '/contact'
-    },
-]
 
 const emailMain: string = 'hello@harbstone.digital';
 
@@ -102,29 +69,45 @@ const socialMain: SocialArray[] = [
         href: 'https://vimeo.com'
     },
 ]
-const languageArray: LanguageItem[] = [
-    {
-        name: 'LV'
-    },
-    {
-        name: 'RU'
-    },
-]
-
 export default function Header({
-    navigation = NavigationMenu,
+    navigation,
     email = emailMain,
     numbers = numbersMain,
     social = socialMain,
-    language = languageArray
+    language
 }: HeaderProps) {
+    const {
+        locale,
+        localeHref,
+        localizedHref,
+        selectLocale,
+        translations: t,
+    } = useI18n();
+    const localizedNavigation: NavigationArray[] = navigation || [
+        { label: t.nav.works, href: '/works' },
+        {
+            label: t.nav.services,
+            children: [
+                { label: t.nav.webDev, href: '/services/web-dev' },
+                { label: t.nav.videoProduction, href: '/services/video-production' },
+                { label: t.nav.contentPromotion, href: '/services/viral-promotion' },
+            ],
+        },
+        { label: t.nav.about, href: '/about' },
+        { label: t.nav.euProjects, href: '/eu-project' },
+        { label: t.nav.contacts, href: '/contact' },
+    ];
+    const localizedLanguages = language || locales
+        .filter((item) => item !== locale)
+        .map((item) => ({ name: item.toUpperCase() }));
     const [isOpen, setIsOpen] = useState(false);
     const pathname = usePathname();
+    const router = useRouter();
     const lenis = useLenis();
     const menuRef = useRef<HTMLDivElement | null>(null);
     const timelineRef = useRef<gsap.core.Timeline | null>(null);
     useBodyScrollLock(isOpen);
-    const languageListWidth = `${language.length * 55 + Math.max(language.length - 1, 0) * 12}px`;
+    const languageListWidth = `${localizedLanguages.length * 55 + Math.max(localizedLanguages.length - 1, 0) * 12}px`;
     const switchMenu = () => {
         setIsOpen((current) => !current);
     }
@@ -290,25 +273,37 @@ export default function Header({
             <header className={styles.header}>
                 <Container>
                     <div className={styles.header__body}>
-                        <Link onClick={handleLogoClick} href="/" className={styles.header__logo}>
+                        <Link onClick={handleLogoClick} href={localizedHref('/')} className={styles.header__logo}>
                             <Image loading="eager" src={Logo} alt="" />
                         </Link>
                         <div className={styles.header__action}>
                             <div
                                 className={styles.header__language}
                                 style={{ '--language-list-width': languageListWidth } as CSSProperties}
-                                aria-label="Выбор языка"
+                                aria-label={t.common.selectLanguage}
                                 tabIndex={0}
                             >
                                 <div className={styles['header__language-all']}>
-                                    {language.map((item) => (
-                                        <Link key={item.name} className='text text--small text--white-color' href="/" onClick={closeMenu}>
+                                    {localizedLanguages.map((item) => (
+                                        <Link
+                                            key={item.name}
+                                            className='text text--small text--white-color'
+                                            href={localeHref(item.name.toLowerCase() as 'en' | 'lv' | 'ru')}
+                                            onClick={(event) => {
+                                                event.preventDefault();
+                                                const nextLocale = item.name.toLowerCase() as 'en' | 'lv' | 'ru';
+                                                const href = localeHref(nextLocale);
+                                                selectLocale(nextLocale);
+                                                closeMenu();
+                                                router.replace(href, { scroll: false });
+                                            }}
+                                        >
                                             {item.name}
                                         </Link>
                                     ))}
                                 </div>
                                 <div className={`${styles['header__language-main']} text text--small text--dark-color`}>
-                                    EN
+                                    {locale.toUpperCase()}
                                 </div>
                             </div>
                             <button
@@ -317,7 +312,7 @@ export default function Header({
                                 onClick={switchMenu}
                                 aria-expanded={isOpen}
                                 aria-controls="main-menu"
-                                aria-label={isOpen ? 'Close menu' : 'Open menu'}
+                                aria-label={isOpen ? t.common.closeMenu : t.common.openMenu}
                             >
                                 <TextAlignJustify className={styles['header-menu-open__burger']} />
                                 <X className={styles['header-menu-open__close']} />
@@ -332,15 +327,15 @@ export default function Header({
                         <div className={styles['main-menu__content']}>
                             <div className={styles['main-menu__navigation']}>
                                 <nav>
-                                    {navigation.map((item) => (
+                                    {localizedNavigation.map((item) => (
                                         item.children ? (
                                             <React.Fragment key={item.label}>
-                                                <Link href={item.href ? item.href : '/services'} onClick={closeMenu} className="heading heading--font-1 heading--standard heading--dark-color" data-menu-item>
+                                                <Link href={localizedHref(item.href ? item.href : '/services')} onClick={closeMenu} className="heading heading--font-1 heading--standard heading--dark-color" data-menu-item>
                                                     {item.label}
                                                 </Link>
                                                 <div>
                                                     {item.children.map((child) => (
-                                                        <Link key={child.label} href={child.href ? child.href : '/services'} onClick={closeMenu} className="text text--standard text--dark-color text--weight-400" data-menu-item>
+                                                        <Link key={child.label} href={localizedHref(child.href ? child.href : '/services')} onClick={closeMenu} className="text text--standard text--dark-color text--weight-400" data-menu-item>
                                                             <span>{child.label}</span>
                                                             <ArrowUpRight />
                                                         </Link>
@@ -348,7 +343,7 @@ export default function Header({
                                                 </div>
                                             </React.Fragment>
                                         ) : (
-                                            <Link key={item.label} href={item.href ? item.href : '/'} onClick={closeMenu} className="heading heading--font-1 heading--standard heading--dark-color" data-menu-item>
+                                            <Link key={item.label} href={localizedHref(item.href ? item.href : '/')} onClick={closeMenu} className="heading heading--font-1 heading--standard heading--dark-color" data-menu-item>
                                                 {item.label}
                                             </Link>
                                         )
@@ -364,7 +359,7 @@ export default function Header({
                                         onClick={() => setIsOpen(false)}
                                     >
                                         <ArrowUpRight />
-                                        Start Your Project
+                                        {t.common.startProject}
                                     </Button>
                                 </div>
                             </div>
@@ -375,7 +370,7 @@ export default function Header({
                                         <p
                                             className={`${styles['get-in-touch__label']} text text--medium text--dark-color text--weight-400`}
                                         >
-                                            Work mail:
+                                            {t.common.workMail}
                                         </p>
                                         {email && (
                                             <Link
@@ -391,7 +386,7 @@ export default function Header({
                                         <p
                                             className={`${styles['get-in-touch__label']} text text--medium text--dark-color text--weight-400`}
                                         >
-                                            Numbers:
+                                            {t.common.numbers}
                                         </p>
                                         {numbers.map((item) => (
                                             <Link
@@ -410,7 +405,7 @@ export default function Header({
                                         <p
                                             className={`${styles['get-in-touch__label']} text text--medium text--dark-color text--weight-400`}
                                         >
-                                            Socials:
+                                            {t.common.socials}
                                         </p>
                                         {social.map((item) => (
                                             <Link

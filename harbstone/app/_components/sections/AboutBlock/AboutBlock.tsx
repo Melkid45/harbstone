@@ -7,6 +7,10 @@ import AboutCounters from "./AboutCounters";
 interface AboutBlockProps {
     title: string | ReactNode;
     description: string;
+    breadcrumbs?: {
+        label: string;
+        href?: string;
+    }[];
     points: {
         title: string;
         description: string;
@@ -17,15 +21,16 @@ interface AboutBlockProps {
 export default function AboutBlock({
     title,
     description,
+    breadcrumbs = [
+        {label: 'Main', href: '/'},
+        {label: 'About'},
+    ],
     points
 }: AboutBlockProps) {
     return (
         <BlockWrapper padding="pb" background="dark" number={true}>
             <Breadcrumbs
-                breadcrumbs={[
-                    {label: 'Main', href: '/'},
-                    {label: 'About'},
-                ]}
+                breadcrumbs={breadcrumbs}
             />
             <div className="block__header">
                 <BlockTitle

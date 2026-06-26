@@ -1,6 +1,9 @@
+'use client';
+
 import { AnchorHTMLAttributes, ButtonHTMLAttributes, CSSProperties, ReactNode } from "react";
 import styles from './Button.module.scss';
 import Link from "next/link";
+import { useI18n } from "@/app/_i18n/LocaleProvider";
 
 interface ButtonStyleProps {
     children: string | ReactNode;
@@ -121,6 +124,7 @@ export default function Button({
     customClass,
     ...props
 }: ButtonProps) {
+    const { localizedHref } = useI18n();
     const buttonText = getButtonText(children);
     const accessibilityProps = buttonText && !props['aria-label'] ? { 'aria-label': buttonText } : {};
     const className = getButtonClassName({
@@ -135,7 +139,7 @@ export default function Button({
 
     return (
         isLink ? (
-            <Link href={href ? href : '/'} className={className} {...accessibilityProps} {...props as Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'color' | 'href'>}>
+            <Link href={localizedHref(href ? href : '/')} className={className} {...accessibilityProps} {...props as Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'color' | 'href'>}>
                 {renderButtonChildren(children)}
             </Link>
         ) : (

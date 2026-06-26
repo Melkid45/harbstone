@@ -5,6 +5,7 @@ import { FormEvent, useMemo, useState } from "react";
 import Button from "../../general/Button/Button";
 import { sendProjectRequest } from "../../../_lib/request";
 import styles from './RequestBlock.module.scss';
+import { useI18n } from "@/app/_i18n/LocaleProvider";
 
 export interface RequestInput {
     name: string;
@@ -27,25 +28,33 @@ type RequestErrors = Record<string, string>;
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phonePattern = /^[+()\d\s-]{6,}$/;
 
-function getFieldError(input: RequestInput, value: string) {
+function getFieldError(
+    input: RequestInput,
+    value: string,
+    messages: {
+        required: string;
+        invalidEmail: string;
+        invalidPhone: string;
+        shortMessage: string;
+    }
+) {
     const trimmedValue = value.trim();
-    const label = input.placeholder.replace(/^Your\s+/i, '').trim();
-    const fallbackError = input.error || `${label || 'This field'} is required`;
+    const fallbackError = input.error || messages.required;
 
     if (!trimmedValue) {
         return fallbackError;
     }
 
     if (input.type === 'email' && !emailPattern.test(trimmedValue)) {
-        return input.error || 'Enter a valid email';
+        return input.error || messages.invalidEmail;
     }
 
     if (input.type === 'tel' && !phonePattern.test(trimmedValue)) {
-        return input.error || 'Enter a valid phone number';
+        return input.error || messages.invalidPhone;
     }
 
     if (input.name === 'message' && trimmedValue.length < 10) {
-        return input.error || 'Tell us a little more about the project';
+        return input.error || messages.shortMessage;
     }
 
     return '';
@@ -56,6 +65,7 @@ export default function RequestForm({
     pricing,
     variant = 'footer'
 }: RequestFormProps) {
+    const { translations: t } = useI18n();
     const initialValues = useMemo(
         () => inputs.reduce<RequestValues>((values, input) => {
             values[input.name] = '';
@@ -73,7 +83,7 @@ export default function RequestForm({
 
     const validateForm = () => {
         const nextErrors = inputs.reduce<RequestErrors>((fieldErrors, input) => {
-            const fieldError = getFieldError(input, values[input.name] || '');
+            const fieldError = getFieldError(input, values[input.name] || '', t.form);
 
             if (fieldError) {
                 fieldErrors[input.name] = fieldError;
@@ -83,7 +93,7 @@ export default function RequestForm({
         }, {});
 
         if (!selectedBudget) {
-            nextErrors.price = 'Choose a project budget';
+            nextErrors.price = t.form.chooseBudget;
         }
 
         setErrors(nextErrors);
@@ -114,7 +124,7 @@ export default function RequestForm({
             setErrors({});
             setIsSuccess(true);
         } catch (error) {
-            setFormError(error instanceof Error ? error.message : 'Request was not sent');
+            setFormError(error instanceof Error ? error.message : t.form.requestFailed);
         } finally {
             setIsSubmitting(false);
         }
@@ -200,7 +210,7 @@ export default function RequestForm({
                 <div className={`${styles.request__bottom} ${isPopup ? styles['request__bottom--full'] : ''}`}>
                     <div className={styles.request__budget}>
                         <h3 className={`text text--medium ${isPopup ? 'text--dark-color' : 'text--white-color'}`}>
-                            Project budget
+                            {t.form.budget}
                         </h3>
                         <div
                             className={`
@@ -243,7 +253,7 @@ export default function RequestForm({
                         border={isPopup ? 'dark' : 'white'}
                     >
                         <ArrowUpRight />
-                        {isSubmitting ? 'Sending...' : 'Send'}
+                        {isSubmitting ? t.form.sending : t.form.send}
                     </Button>
                 </div>
                 {formError && (
@@ -253,10 +263,10 @@ export default function RequestForm({
                 )}
                 <div className={styles.request__success} role="dialog" aria-modal="true" aria-live="polite">
                     <h3 className={`heading heading--font-1 heading--standard ${isPopup ? 'heading--dark-color' : 'heading--white-color'}`}>
-                        Thanks! We heard you.
+                        {t.form.successTitle}
                     </h3>
                     <p className={`text text--small ${isPopup ? 'text--dark-color' : 'text--white-color'}`}>
-                        We&apos;ll review your request and contact you soon.
+                        {t.form.successText}
                     </p>
                     <Button
                         type="button"
@@ -266,7 +276,7 @@ export default function RequestForm({
                         border={isPopup ? 'dark' : 'white'}
                         onClick={() => setIsSuccess(false)}
                     >
-                        Close
+                        {t.form.close}
                     </Button>
                 </div>
             </form>
