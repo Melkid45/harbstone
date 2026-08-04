@@ -1,0 +1,60 @@
+server {
+    listen 80;
+    listen [::]:80;
+    server_name harbstone.digital www.harbstone.digital admin.harbstone.digital;
+
+    location ~ ^/.well-known/acme-challenge/ {
+        root /app/acme/challenge/harbstone.digital;
+    }
+
+    location = /.well-known/acme-challenge/ {
+        return 404;
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    server_name harbstone.digital www.harbstone.digital;
+
+    ssl_certificate /app/acme/certificates/harbstone.digital/fullchain.cer;
+    ssl_certificate_key /app/acme/certificates/harbstone.digital/harbstone.digital.key;
+
+    location / {
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_buffering off;
+        proxy_pass http://51.15.99.215:3003;
+    }
+}
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    server_name admin.harbstone.digital;
+
+    ssl_certificate /app/acme/certificates/harbstone.digital/fullchain.cer;
+    ssl_certificate_key /app/acme/certificates/harbstone.digital/harbstone.digital.key;
+
+    client_max_body_size 1G;
+
+    location / {
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_pass http://51.15.99.215:1337;
+    }
+}

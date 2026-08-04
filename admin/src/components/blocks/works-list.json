@@ -1,0 +1,56 @@
+{
+  "collectionName": "components_blocks_works_lists",
+  "info": {
+    "displayName": "Works Block",
+    "description": "Work items will be connected after the Work collection is created"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "source": {
+      "type": "enumeration",
+      "enum": [
+        "all",
+        "selected"
+      ],
+      "default": "all",
+      "required": true
+    },
+    "selectedWorks": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::work.work"
+    },
+    "itemLimit": {
+      "type": "integer",
+      "min": 1
+    },
+    "padding": {
+      "type": "enumeration",
+      "enum": [
+        "y",
+        "pt",
+        "pb"
+      ],
+      "default": "pt"
+    },
+    "showMore": {
+      "type": "boolean",
+      "default": true
+    },
+    "showBreadcrumbs": {
+      "type": "boolean",
+      "default": false
+    },
+    "showSectionNumber": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

@@ -1,0 +1,100 @@
+name: ${COMPOSE_PROJECT_NAME:-harbstone}
+
+services:
+  strapi:
+    image: ${STRAPI_IMAGE:-harbstone-strapi:latest}
+    build:
+      context: ./admin
+      args:
+        PUBLIC_URL: ${STRAPI_PUBLIC_URL:?STRAPI_PUBLIC_URL is required}
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 1337
+      PUBLIC_URL: ${STRAPI_PUBLIC_URL}
+      CORS_ORIGINS: ${CORS_ORIGINS}
+      STRAPI_PLUGIN_I18N_INIT_LOCALE_CODE: en
+      UPLOAD_MAX_FILE_SIZE_BYTES: ${UPLOAD_MAX_FILE_SIZE_BYTES:-1000000000}
+      DATABASE_CLIENT: postgres
+      DATABASE_HOST: ${DATABASE_HOST:?DATABASE_HOST is required}
+      DATABASE_PORT: ${DATABASE_PORT:-5432}
+      DATABASE_NAME: ${DATABASE_NAME:?DATABASE_NAME is required}
+      DATABASE_USERNAME: ${DATABASE_USERNAME:?DATABASE_USERNAME is required}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:?DATABASE_PASSWORD is required}
+      DATABASE_SSL: ${DATABASE_SSL:-true}
+      DATABASE_SSL_REJECT_UNAUTHORIZED: ${DATABASE_SSL_REJECT_UNAUTHORIZED:-true}
+      DATABASE_POOL_MIN: ${DATABASE_POOL_MIN:-0}
+      DATABASE_POOL_MAX: ${DATABASE_POOL_MAX:-10}
+      APP_KEYS: ${APP_KEYS:?APP_KEYS is required}
+      API_TOKEN_SALT: ${API_TOKEN_SALT:?API_TOKEN_SALT is required}
+      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET:?ADMIN_JWT_SECRET is required}
+      TRANSFER_TOKEN_SALT: ${TRANSFER_TOKEN_SALT:?TRANSFER_TOKEN_SALT is required}
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:?ENCRYPTION_KEY is required}
+    expose:
+      - "1337"
+    ports:
+      - "${STRAPI_PORT:-1337}:1337"
+    volumes:
+      - strapi_public:/app/public
+    networks:
+      app:
+        aliases:
+          - harbstone-strapi
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch('http://127.0.0.1:1337/_health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 45s
+
+  next:
+    image: ${NEXT_IMAGE:-harbstone-next:latest}
+    build:
+      context: ./harbstone
+      args:
+        NEXT_PUBLIC_STRAPI_URL: ${NEXT_PUBLIC_STRAPI_URL:?NEXT_PUBLIC_STRAPI_URL is required}
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      HOSTNAME: 0.0.0.0
+      PORT: 3000
+      STRAPI_INTERNAL_URL: http://strapi:1337
+      STRAPI_URL: ${STRAPI_PUBLIC_URL}
+      NEXT_PUBLIC_STRAPI_URL: ${NEXT_PUBLIC_STRAPI_URL}
+      RESEND_API_KEY: ${RESEND_API_KEY:?RESEND_API_KEY is required}
+      RESEND_FROM_EMAIL: ${RESEND_FROM_EMAIL:?RESEND_FROM_EMAIL is required}
+      REQUEST_TO_EMAIL: ${REQUEST_TO_EMAIL:?REQUEST_TO_EMAIL is required}
+    expose:
+      - "3000"
+    ports:
+      - "${FRONTEND_PORT:-3003}:3000"
+    depends_on:
+      strapi:
+        condition: service_healthy
+    networks:
+      app:
+        aliases:
+          - harbstone-next
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch('http://127.0.0.1:3000').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  strapi_public:
+
+networks:
+  app:
+    driver: bridge

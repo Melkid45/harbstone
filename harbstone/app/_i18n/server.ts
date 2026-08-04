@@ -1,9 +1,10 @@
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import {
     defaultLocale,
     normalizeLocale,
     type Locale,
 } from "./config";
+import { localeRequestHeader } from "./routing";
 
 export const getRequestLocale = async (
     value?: string | string[]
@@ -14,6 +15,15 @@ export const getRequestLocale = async (
 
     if (queryLocale) {
         return queryLocale;
+    }
+
+    const headerStore = await headers();
+    const pathnameLocale = normalizeLocale(
+        headerStore.get(localeRequestHeader)
+    );
+
+    if (pathnameLocale) {
+        return pathnameLocale;
     }
 
     const cookieStore = await cookies();

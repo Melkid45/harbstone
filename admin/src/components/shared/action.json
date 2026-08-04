@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_shared_actions",
+  "info": {
+    "displayName": "Action"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "link",
+        "popup"
+      ],
+      "default": "link",
+      "required": true
+    },
+    "href": {
+      "type": "string"
+    },
+    "popupId": {
+      "type": "string"
+    }
+  }
+}

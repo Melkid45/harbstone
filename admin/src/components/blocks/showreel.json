@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_blocks_showreels",
+  "info": {
+    "displayName": "Showreel Block"
+  },
+  "options": {},
+  "attributes": {
+    "video": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "videos"
+      ]
+    }
+  }
+}

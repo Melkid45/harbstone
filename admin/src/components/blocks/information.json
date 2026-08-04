@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_blocks_information",
+  "info": {
+    "displayName": "Information Block"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "texts": {
+      "type": "component",
+      "component": "shared.text-item",
+      "repeatable": true,
+      "required": true
+    }
+  }
+}

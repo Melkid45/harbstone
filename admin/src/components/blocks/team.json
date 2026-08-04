@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_blocks_team",
+  "info": {
+    "displayName": "Team Block"
+  },
+  "options": {},
+  "attributes": {
+    "source": {
+      "type": "enumeration",
+      "enum": [
+        "all",
+        "selected"
+      ],
+      "default": "all",
+      "required": true
+    },
+    "selectedMembers": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::team-member.team-member"
+    }
+  }
+}

@@ -1,6 +1,7 @@
 import Works1 from '@/app/assets/images/services/1.webp'
 import Works2 from '@/app/assets/images/services/2.webp'
 import { services } from '../services/services';
+import { getWorksFilterHref } from '@/app/_lib/worksRouting';
 
 export type WorksFilter = {
     service?: string;
@@ -18,19 +19,7 @@ const slugify = (value: string) => (
 const getSoftSlug = (href: string, name: string) => href.split('#')[1] || slugify(name);
 
 export const getWorksHref = ({ service, soft }: WorksFilter = {}) => {
-    const params = new URLSearchParams();
-
-    if (service) {
-        params.set('service', service);
-    }
-
-    if (soft) {
-        params.set('soft', soft);
-    }
-
-    const query = params.toString();
-
-    return query ? `/works?${query}` : '/works';
+    return getWorksFilterHref(service, soft);
 };
 
 export const works = [

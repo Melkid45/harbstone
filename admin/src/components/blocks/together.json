@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_blocks_together",
+  "info": {
+    "displayName": "Together Block"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "items": {
+      "type": "component",
+      "component": "shared.text-item",
+      "repeatable": true,
+      "required": true
+    }
+  }
+}

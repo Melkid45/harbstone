@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getWorks, works as localWorks } from "../works";
+import {
+    categories as localWorkCategories,
+    getWorks,
+    works as localWorks,
+} from "../works";
 import WorkHeroBlock from "@/app/_components/sections/WorksBlock/WorkHeroBlock/WorkHeroBlock";
 import WorksBlock from "@/app/_components/sections/WorksBlock/WorksBlock";
 import ReelsBlock from "@/app/_components/sections/ReelsBlock/ReelsBlock";
@@ -23,6 +27,8 @@ import {
 import { getContentMetadata } from "@/app/_lib/pageMetadata";
 import { getRequestLocale } from "@/app/_i18n/server";
 import { getTranslations } from "@/app/_i18n/config";
+import WorksListing from "../_components/WorksListing";
+import { getWorksFilterHref } from "@/app/_lib/worksRouting";
 interface WorkPageProps {
     params: Promise<{
         slug: string;
@@ -73,13 +79,27 @@ export default async function ServicePage({
         getWorksCatalog(locale),
         getTeamMembersCatalog(locale),
     ]);
+    const workCards = cmsWorks.map(mapWorkToCard);
+    const cmsWorkCategories = buildWorkCategories(cmsServices, workCards);
+    const availableFilterCategories = cmsWorkCategories.length
+        ? cmsWorkCategories
+        : localWorkCategories;
+
+    if (availableFilterCategories.some((category) => category.slug === slug)) {
+        return (
+            <WorksListing
+                locale={locale}
+                service={slug}
+                strict={true}
+            />
+        );
+    }
 
     if (cmsWork) {
-        const workCards = cmsWorks.map(mapWorkToCard);
         const categories = [
             ...(cmsWork.services || []).map((service) => ({
                 label: service.name,
-                href: `/works?service=${encodeURIComponent(service.slug)}`,
+                href: getWorksFilterHref(service.slug),
             })),
             ...getSubserviceCategories(cmsWork),
         ];

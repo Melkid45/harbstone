@@ -1,0 +1,40 @@
+{
+  "collectionName": "components_blocks_heroes",
+  "info": {
+    "displayName": "Hero Block",
+    "description": "Page heading, description, breadcrumbs and actions"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "text",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "fullText": {
+      "type": "boolean",
+      "default": false
+    },
+    "padding": {
+      "type": "enumeration",
+      "enum": [
+        "pb",
+        "pt"
+      ],
+      "default": "pb"
+    },
+    "breadcrumbs": {
+      "type": "component",
+      "component": "shared.breadcrumb",
+      "repeatable": true
+    },
+    "actions": {
+      "type": "component",
+      "component": "shared.action",
+      "repeatable": true
+    }
+  }
+}

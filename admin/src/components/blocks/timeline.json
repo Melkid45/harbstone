@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_blocks_timelines",
+  "info": {
+    "displayName": "Timeline Block"
+  },
+  "options": {},
+  "attributes": {
+    "items": {
+      "type": "component",
+      "component": "shared.timeline-item",
+      "repeatable": true,
+      "required": true
+    }
+  }
+}

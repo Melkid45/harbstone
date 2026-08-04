@@ -1,0 +1,16 @@
+.git
+.github
+.tmp
+.strapi
+build
+dist
+node_modules
+npm-debug.log*
+.env
+.env.*
+!.env.example
+.DS_Store
+public/uploads/*
+!public/uploads/.gitkeep
+coverage
+README.md

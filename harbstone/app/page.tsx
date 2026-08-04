@@ -73,13 +73,13 @@ const celebritySlides = [
   {
     title: 'Roy Jones',
     description: 'We filmed and produced a comprehensive documentary project about Roy Jones.',
-    href: '/works?service=video-production',
+    href: '/works/video-production',
     image: Celeb2,
   },
   {
     title: 'Oleksandr Usyk',
     description: 'We filmed and produced a comprehensive documentary project about Oleksandr Usyk.',
-    href: '/works?service=video-production',
+    href: '/works/video-production',
     image: Celeb2,
   },
 ];

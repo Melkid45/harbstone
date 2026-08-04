@@ -1,0 +1,40 @@
+{
+  "collectionName": "components_blocks_contacts",
+  "info": {
+    "displayName": "Contacts Block"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "breadcrumbs": {
+      "type": "component",
+      "component": "shared.breadcrumb",
+      "repeatable": true
+    },
+    "phones": {
+      "type": "component",
+      "component": "shared.phone",
+      "repeatable": true
+    },
+    "email": {
+      "type": "email",
+      "required": true
+    },
+    "socialLinks": {
+      "type": "component",
+      "component": "shared.contact-link",
+      "repeatable": true
+    },
+    "address": {
+      "type": "text",
+      "required": true
+    },
+    "mapUrl": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

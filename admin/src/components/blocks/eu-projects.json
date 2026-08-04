@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_blocks_eu_projects",
+  "info": {
+    "displayName": "EU Projects Block"
+  },
+  "options": {},
+  "attributes": {
+    "projects": {
+      "type": "component",
+      "component": "shared.eu-project",
+      "repeatable": true,
+      "required": true
+    }
+  }
+}

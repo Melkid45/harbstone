@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_blocks_reels",
+  "info": {
+    "displayName": "Vimeo Reels Block"
+  },
+  "options": {},
+  "attributes": {
+    "videoUrl": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

@@ -14,6 +14,7 @@ import gsap from "gsap";
 import useBodyScrollLock from "@/app/_hooks/useBodyScrollLock";
 import { locales } from "@/app/_i18n/config";
 import { useI18n } from "@/app/_i18n/LocaleProvider";
+import { stripLocaleFromPathname } from "@/app/_i18n/routing";
 
 interface HeaderProps {
     navigation?: NavigationArray[];
@@ -117,7 +118,7 @@ export default function Header({
     const handleLogoClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
         closeMenu();
 
-        if (pathname !== '/') {
+        if (stripLocaleFromPathname(pathname) !== '/') {
             return;
         }
 

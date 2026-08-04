@@ -47,6 +47,8 @@ if (
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  trailingSlash: true,
+  skipTrailingSlashRedirect: true,
   images: {
     remotePatterns: strapiRemotePatterns,
     dangerouslyAllowLocalIP: isLocalStrapi,

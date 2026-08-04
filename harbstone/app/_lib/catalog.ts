@@ -10,6 +10,7 @@ import type {
     StrapiTeamMember,
     StrapiWork,
 } from "../_types/strapi";
+import { getWorksFilterHref } from "./worksRouting";
 
 const getStrapiUrl = () => (
     process.env.STRAPI_INTERNAL_URL
@@ -19,8 +20,7 @@ const getStrapiUrl = () => (
 ).replace(/\/$/, '');
 
 const fetchStrapi = async <T>(
-    path: string,
-    tag: string
+    path: string
 ): Promise<T | null> => {
     const strapiUrl = getStrapiUrl();
 
@@ -30,11 +30,8 @@ const fetchStrapi = async <T>(
 
     try {
         const response = await fetch(`${strapiUrl}${path}`, {
+            cache: 'no-store',
             signal: AbortSignal.timeout(3000),
-            next: {
-                revalidate: 60,
-                tags: [tag],
-            },
         });
 
         if (!response.ok) {
@@ -52,8 +49,7 @@ export const getServicesCatalog = cache(async (
     locale = 'en'
 ): Promise<StrapiService[]> => (
     await fetchStrapi<StrapiService[]>(
-        `/api/services/catalog?locale=${encodeURIComponent(locale)}`,
-        `services:${locale}`
+        `/api/services/catalog?locale=${encodeURIComponent(locale)}`
     ) || []
 ));
 
@@ -62,8 +58,7 @@ export const getServiceBySlug = cache(async (
     locale = 'en'
 ): Promise<StrapiService | null> => (
     fetchStrapi<StrapiService>(
-        `/api/services/by-slug/${encodeURIComponent(slug)}?locale=${encodeURIComponent(locale)}`,
-        `service:${locale}:${slug}`
+        `/api/services/by-slug/${encodeURIComponent(slug)}?locale=${encodeURIComponent(locale)}`
     )
 ));
 
@@ -71,8 +66,7 @@ export const getWorksCatalog = cache(async (
     locale = 'en'
 ): Promise<StrapiWork[]> => (
     await fetchStrapi<StrapiWork[]>(
-        `/api/works/catalog?locale=${encodeURIComponent(locale)}`,
-        `works:${locale}`
+        `/api/works/catalog?locale=${encodeURIComponent(locale)}`
     ) || []
 ));
 
@@ -81,8 +75,7 @@ export const getWorkBySlug = cache(async (
     locale = 'en'
 ): Promise<StrapiWork | null> => (
     fetchStrapi<StrapiWork>(
-        `/api/works/by-slug/${encodeURIComponent(slug)}?locale=${encodeURIComponent(locale)}`,
-        `work:${locale}:${slug}`
+        `/api/works/by-slug/${encodeURIComponent(slug)}?locale=${encodeURIComponent(locale)}`
     )
 ));
 
@@ -90,8 +83,7 @@ export const getTeamMembersCatalog = cache(async (
     locale = 'en'
 ): Promise<StrapiTeamMember[]> => (
     await fetchStrapi<StrapiTeamMember[]>(
-        `/api/team-members/catalog?locale=${encodeURIComponent(locale)}`,
-        `team-members:${locale}`
+        `/api/team-members/catalog?locale=${encodeURIComponent(locale)}`
     ) || []
 ));
 
@@ -138,21 +130,6 @@ export interface TeamMemberCard {
     role?: string;
     photo: StaticImageData | string;
 }
-
-const getWorksHref = (service?: string, soft?: string) => {
-    const params = new URLSearchParams();
-
-    if (service) {
-        params.set('service', service);
-    }
-
-    if (soft) {
-        params.set('soft', soft);
-    }
-
-    const query = params.toString();
-    return query ? `/works?${query}` : '/works';
-};
 
 export const mapServiceToCard = (
     service: StrapiService
@@ -216,14 +193,14 @@ export const buildWorkCategories = (
             return hasSubserviceWorks ? [{
                 label: subservice.name,
                 slug: subservice.slug,
-                href: getWorksHref(service.slug, subservice.slug),
+                href: getWorksFilterHref(service.slug, subservice.slug),
             }] : [];
         });
 
         return hasServiceWorks ? [{
             label: service.name,
             slug: service.slug,
-            href: getWorksHref(service.slug),
+            href: getWorksFilterHref(service.slug),
             children,
         }] : [];
     })
@@ -253,7 +230,7 @@ export const getSubserviceCategories = (
 
         return {
             label: subservice.name,
-            href: getWorksHref(serviceSlug, subservice.slug),
+            href: getWorksFilterHref(serviceSlug, subservice.slug),
         };
     })
 );

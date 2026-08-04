@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_blocks_celebrities",
+  "info": {
+    "displayName": "Celebrities Block"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "celebrities": {
+      "type": "component",
+      "component": "shared.celebrity",
+      "repeatable": true,
+      "required": true
+    }
+  }
+}

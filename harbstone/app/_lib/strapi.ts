@@ -52,11 +52,8 @@ export const getPageBySlug = cache(async (
 
     try {
         const response = await fetch(url, {
+            cache: 'no-store',
             signal: AbortSignal.timeout(3000),
-            next: {
-                revalidate: 60,
-                tags: [`page:${locale}:${slug}`],
-            },
         });
 
         if (!response.ok) {

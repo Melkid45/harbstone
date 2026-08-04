@@ -1,0 +1,5 @@
+.DS_Store
+.env
+.env.production
+.env.production.local
+*.agekey

@@ -29,10 +29,13 @@ export default function GalleryBlock({
         }
 
         const aspectRatio = image.naturalWidth / image.naturalHeight;
+        const targetWidth = aspectRatio * coeff;
 
         wrapper.style.paddingBottom = `${100 / aspectRatio}%`;
-        item.style.width = `${aspectRatio * coeff}px`;
-        item.style.flexGrow = `${aspectRatio * coeff}`;
+        item.style.width = `min(${targetWidth}px, 100%)`;
+        item.style.flexBasis = `min(${targetWidth}px, 100%)`;
+        item.style.flexGrow = `${targetWidth}`;
+        item.style.maxWidth = '100%';
     };
 
     return (

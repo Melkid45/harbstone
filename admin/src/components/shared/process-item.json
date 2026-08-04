@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_shared_process_items",
+  "info": {
+    "displayName": "Process Item"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    }
+  }
+}

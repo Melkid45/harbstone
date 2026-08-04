@@ -12,10 +12,10 @@ import { usePathname } from "next/navigation";
 import {
     defaultLocale,
     getTranslations,
-    normalizeLocale,
     type Locale,
     type Translations,
 } from "./config";
+import { localizeHref } from "./routing";
 
 interface LocaleContextValue {
     locale: Locale;
@@ -33,26 +33,6 @@ const LocaleContext = createContext<LocaleContextValue>({
     selectLocale: () => undefined,
 });
 
-const addLocaleToHref = (href: string, locale: Locale) => {
-    if (!href.startsWith('/') || href.startsWith('//')) {
-        return href;
-    }
-
-    const url = new URL(href, 'https://harbstone.local');
-    url.searchParams.set('locale', locale);
-
-    return `${url.pathname}${url.search}${url.hash}`;
-};
-
-const getCookieLocale = () => {
-    const value = document.cookie
-        .split('; ')
-        .find((item) => item.startsWith('locale='))
-        ?.split('=')[1];
-
-    return normalizeLocale(value);
-};
-
 export default function LocaleProvider({
     children,
     initialLocale,
@@ -65,28 +45,26 @@ export default function LocaleProvider({
 
     useEffect(() => {
         const animationFrame = requestAnimationFrame(() => {
-            const queryLocale = normalizeLocale(
-                new URLSearchParams(window.location.search).get('locale')
-            );
-            const nextLocale = queryLocale || getCookieLocale() || initialLocale;
             setLocale((currentLocale) => (
-                currentLocale === nextLocale ? currentLocale : nextLocale
+                currentLocale === initialLocale ? currentLocale : initialLocale
             ));
-            document.cookie = `locale=${nextLocale}; path=/; max-age=31536000; samesite=lax`;
-            document.documentElement.lang = nextLocale;
+            document.cookie = `locale=${initialLocale}; path=/; max-age=31536000; samesite=lax`;
+            document.documentElement.lang = initialLocale;
         });
 
         return () => cancelAnimationFrame(animationFrame);
-    }, [initialLocale, pathname]);
+    }, [initialLocale]);
 
     const value = useMemo<LocaleContextValue>(() => ({
         locale,
         translations: getTranslations(locale),
-        localeHref: (nextLocale) => addLocaleToHref(
-            `${pathname}${typeof window === 'undefined' ? '' : window.location.search}`,
+        localeHref: (nextLocale) => localizeHref(
+            `${pathname}${typeof window === 'undefined'
+                ? ''
+                : `${window.location.search}${window.location.hash}`}`,
             nextLocale
         ),
-        localizedHref: (href) => addLocaleToHref(href, locale),
+        localizedHref: (href) => localizeHref(href, locale),
         selectLocale: (nextLocale) => {
             document.cookie = `locale=${nextLocale}; path=/; max-age=31536000; samesite=lax`;
             setLocale(nextLocale);

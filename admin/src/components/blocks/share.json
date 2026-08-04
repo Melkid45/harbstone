@@ -1,0 +1,9 @@
+{
+  "collectionName": "components_blocks_share",
+  "info": {
+    "displayName": "Share Block",
+    "description": "Social sharing buttons for the current work"
+  },
+  "options": {},
+  "attributes": {}
+}

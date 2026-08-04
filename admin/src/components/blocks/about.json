@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_blocks_about",
+  "info": {
+    "displayName": "About Block"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "text",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "breadcrumbs": {
+      "type": "component",
+      "component": "shared.breadcrumb",
+      "repeatable": true
+    },
+    "points": {
+      "type": "component",
+      "component": "shared.stat",
+      "repeatable": true,
+      "required": true
+    }
+  }
+}

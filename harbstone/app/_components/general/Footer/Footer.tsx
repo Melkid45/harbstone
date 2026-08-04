@@ -66,15 +66,15 @@ const navigationMain = [
         children: [
             {
                 label: 'Web design & UX',
-                href: '/works?service=web-dev&soft=web-design-and-ux'
+                href: '/works/web-dev/web-design-and-ux'
             },
             {
                 label: 'Programming',
-                href: '/works?service=web-dev&soft=programming'
+                href: '/works/web-dev/programming'
             },
             {
                 label: 'SEO / SAO',
-                href: '/works?service=web-dev&soft=seo-sao'
+                href: '/works/web-dev/seo-sao'
             },
         ]
     },
@@ -83,15 +83,15 @@ const navigationMain = [
         children: [
             {
                 label: 'Pre-production',
-                href: '/works?service=video-production&soft=pre-production'
+                href: '/works/video-production/pre-production'
             },
             {
                 label: 'Production',
-                href: '/works?service=video-production&soft=production'
+                href: '/works/video-production/production'
             },
             {
                 label: 'Post-production',
-                href: '/works?service=video-production&soft=post-production'
+                href: '/works/video-production/post-production'
             },
         ]
     },

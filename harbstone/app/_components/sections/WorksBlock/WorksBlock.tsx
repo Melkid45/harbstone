@@ -10,6 +10,7 @@ import styles from './WorksBlock.module.scss';
 import Button from "../../general/Button/Button";
 import Breadcrumbs from "../../general/Breadcrumbs/Breadcrumbs";
 import { useI18n } from "@/app/_i18n/LocaleProvider";
+import { getWorksFilterHref } from "@/app/_lib/worksRouting";
 interface WorksBlockProps {
     title: string;
     description?: string;
@@ -56,28 +57,12 @@ const slugify = (value: string) => (
         .replace(/^-|-$/g, '')
 );
 
-const buildWorksFilterHref = (service?: string, soft?: string) => {
-    const params = new URLSearchParams();
-
-    if (service) {
-        params.set('service', service);
-    }
-
-    if (soft) {
-        params.set('soft', soft);
-    }
-
-    const query = params.toString();
-
-    return query ? `/works?${query}` : '/works';
-};
-
 const normalizeHref = (
     href: string | undefined,
     service?: string,
     soft?: string,
 ) => (
-    href && href !== '/' ? href : buildWorksFilterHref(service, soft)
+    href && href !== '/' ? href : getWorksFilterHref(service, soft)
 );
 
 export default function WorksBlock({

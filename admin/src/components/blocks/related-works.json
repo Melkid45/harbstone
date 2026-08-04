@@ -1,0 +1,36 @@
+{
+  "collectionName": "components_blocks_related_works",
+  "info": {
+    "displayName": "Related Works Block",
+    "description": "Works shown after a work detail page; the current work is excluded automatically"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "default": "More Works"
+    },
+    "description": {
+      "type": "text"
+    },
+    "itemLimit": {
+      "type": "integer",
+      "min": 1,
+      "default": 2
+    },
+    "padding": {
+      "type": "enumeration",
+      "enum": [
+        "y",
+        "pt",
+        "pb"
+      ],
+      "default": "y"
+    },
+    "showMore": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "collectionName": "components_blocks_services_lists",
+  "info": {
+    "displayName": "Services Block",
+    "description": "Services will be connected after the Service collection is created"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "dark": {
+      "type": "boolean",
+      "default": false
+    },
+    "source": {
+      "type": "enumeration",
+      "enum": [
+        "all",
+        "selected"
+      ],
+      "default": "all",
+      "required": true
+    },
+    "selectedServices": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::service.service"
+    },
+    "itemLimit": {
+      "type": "integer",
+      "min": 1
+    }
+  }
+}

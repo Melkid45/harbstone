@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_blocks_ideas",
+  "info": {
+    "displayName": "Idea Block"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    }
+  }
+}

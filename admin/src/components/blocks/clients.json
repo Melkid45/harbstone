@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_blocks_clients",
+  "info": {
+    "displayName": "Clients Block"
+  },
+  "options": {},
+  "attributes": {
+    "clients": {
+      "type": "component",
+      "component": "shared.client",
+      "repeatable": true,
+      "required": true
+    }
+  }
+}
