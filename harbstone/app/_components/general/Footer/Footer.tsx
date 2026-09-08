@@ -47,16 +47,12 @@ const numbersMain: NumbersArray[] = [
 ]
 const socialMain: SocialArray[] = [
     {
-        label: 'X (Twitter)',
-        href: 'https://x.com'
-    },
-    {
         label: 'Instagram',
-        href: 'https://www.instagram.com'
+        href: 'https://www.instagram.com/harbstone.digital/'
     },
     {
         label: 'Vimeo',
-        href: 'https://vimeo.com'
+        href: 'https://vimeo.com/harbstone'
     },
 ]
 

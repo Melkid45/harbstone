@@ -5,7 +5,7 @@ import Image from "next/image";
 import React, { CSSProperties, useEffect, useRef, useState } from "react";
 import Logo from '@/app/assets/images/logo.svg';
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useLenis } from "lenis/react";
 import styles from './Header.module.scss';
 import Container from "../Container/Container";
@@ -58,16 +58,12 @@ const numbersMain: NumbersArray[] = [
 ]
 const socialMain: SocialArray[] = [
     {
-        label: 'X (Twitter)',
-        href: 'https://x.com'
-    },
-    {
         label: 'Instagram',
-        href: 'https://www.instagram.com'
+        href: 'https://www.instagram.com/harbstone.digital/'
     },
     {
         label: 'Vimeo',
-        href: 'https://vimeo.com'
+        href: 'https://vimeo.com/harbstone'
     },
 ]
 export default function Header({
@@ -81,7 +77,6 @@ export default function Header({
         locale,
         localeHref,
         localizedHref,
-        selectLocale,
         translations: t,
     } = useI18n();
     const localizedNavigation: NavigationArray[] = navigation || [
@@ -103,7 +98,6 @@ export default function Header({
         .map((item) => ({ name: item.toUpperCase() }));
     const [isOpen, setIsOpen] = useState(false);
     const pathname = usePathname();
-    const router = useRouter();
     const lenis = useLenis();
     const menuRef = useRef<HTMLDivElement | null>(null);
     const timelineRef = useRef<gsap.core.Timeline | null>(null);
@@ -286,21 +280,14 @@ export default function Header({
                             >
                                 <div className={styles['header__language-all']}>
                                     {localizedLanguages.map((item) => (
-                                        <Link
+                                        <a
                                             key={item.name}
                                             className='text text--small text--white-color'
                                             href={localeHref(item.name.toLowerCase() as 'en' | 'lv' | 'ru')}
-                                            onClick={(event) => {
-                                                event.preventDefault();
-                                                const nextLocale = item.name.toLowerCase() as 'en' | 'lv' | 'ru';
-                                                const href = localeHref(nextLocale);
-                                                selectLocale(nextLocale);
-                                                closeMenu();
-                                                router.replace(href, { scroll: false });
-                                            }}
+                                            onClick={closeMenu}
                                         >
                                             {item.name}
-                                        </Link>
+                                        </a>
                                     ))}
                                 </div>
                                 <div className={`${styles['header__language-main']} text text--small text--dark-color`}>
