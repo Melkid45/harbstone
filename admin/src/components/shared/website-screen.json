@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_shared_website_screens",
+  "info": {
+    "displayName": "Website Screen",
+    "description": "A long website screenshot with an optional main-screen marker"
+  },
+  "options": {},
+  "attributes": {
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "alt": {
+      "type": "string"
+    },
+    "isMain": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

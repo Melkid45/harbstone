@@ -787,6 +787,7 @@ export interface ApiWorkWork extends Struct.CollectionTypeSchema {
         'blocks.contacts',
         'blocks.eu-projects',
         'blocks.gallery',
+        'blocks.screen',
         'blocks.idea',
         'blocks.share',
       ]

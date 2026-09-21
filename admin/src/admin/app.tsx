@@ -106,6 +106,22 @@ export default {
   register(app: StrapiApp) {
     installRuntimeBranding();
 
+    app.customFields.register({
+      name: 'colorPicker',
+      type: 'string',
+      intlLabel: {
+        id: 'global.colorPicker.label',
+        defaultMessage: 'Background color',
+      },
+      intlDescription: {
+        id: 'global.colorPicker.description',
+        defaultMessage: 'Choose the background color for the entire screenshots section.',
+      },
+      components: {
+        Input: async () => import('./components/ColorPickerInput'),
+      },
+    });
+
     app.addRBACMiddleware(() => (next) => (permissions) => (
       next(permissions.filter(({ action }) => action !== 'admin::marketplace.read'))
     ));

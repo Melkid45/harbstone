@@ -184,6 +184,28 @@ export interface BlocksRelatedWorks extends Struct.ComponentSchema {
   };
 }
 
+export interface BlocksScreen extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_screens';
+  info: {
+    description: 'One to three long website screenshots animated on scroll';
+    displayName: 'Website Screens';
+  };
+  attributes: {
+    colorPicker: Schema.Attribute.String &
+      Schema.Attribute.CustomField<'global::colorPicker'> &
+      Schema.Attribute.DefaultTo<'#000'>;
+    screens: Schema.Attribute.Component<'shared.website-screen', true> &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 3;
+          min: 1;
+        },
+        number
+      >;
+  };
+}
+
 export interface BlocksServicesList extends Struct.ComponentSchema {
   collectionName: 'components_blocks_services_lists';
   info: {
@@ -474,6 +496,19 @@ export interface SharedTimelineItem extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedWebsiteScreen extends Struct.ComponentSchema {
+  collectionName: 'components_shared_website_screens';
+  info: {
+    description: 'A long website screenshot with an optional main-screen marker';
+    displayName: 'Website Screen';
+  };
+  attributes: {
+    alt: Schema.Attribute.String;
+    image: Schema.Attribute.Media<'images'> & Schema.Attribute.Required;
+    isMain: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+  };
+}
+
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
@@ -490,6 +525,7 @@ declare module '@strapi/strapi' {
       'blocks.information': BlocksInformation;
       'blocks.reels': BlocksReels;
       'blocks.related-works': BlocksRelatedWorks;
+      'blocks.screen': BlocksScreen;
       'blocks.services-list': BlocksServicesList;
       'blocks.share': BlocksShare;
       'blocks.showreel': BlocksShowreel;
@@ -511,6 +547,7 @@ declare module '@strapi/strapi' {
       'shared.team-member': SharedTeamMember;
       'shared.text-item': SharedTextItem;
       'shared.timeline-item': SharedTimelineItem;
+      'shared.website-screen': SharedWebsiteScreen;
     }
   }
 }

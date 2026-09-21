@@ -128,6 +128,15 @@ export const blocksPopulate = {
         },
       },
     },
+    'blocks.screen': {
+      populate: {
+        screens: {
+          populate: {
+            image: true,
+          },
+        },
+      },
+    },
     'blocks.idea': {
       populate: '*',
     },
