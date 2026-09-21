@@ -17,6 +17,7 @@ import TogetgerBlock from "../../sections/TogetgerBlock/TogetgerBlock";
 import WorksBlock from "../../sections/WorksBlock/WorksBlock";
 import GalleryBlock from "../../sections/works/GalleryBlock/GalleryBlock";
 import IdeaBlock from "../../sections/works/IdeaBlock/IdeaBlock";
+import ScreenBlock from "../../sections/works/ScreenBlock/ScreenBlock";
 import ShareBlock from "../../sections/works/ShareBlock/ShareBlock";
 import { services as localServices } from "../../../(public)/services/services";
 import {
@@ -108,7 +109,7 @@ export default function PageRenderer({
                             label: item.label,
                             href: item.href || undefined,
                         }))}
-                        actions={block.actions?.map((item) => ({
+                        actions={(block.actions || []).map((item) => ({
                             label: item.label,
                             type: item.type,
                             href: item.href || undefined,
@@ -233,7 +234,7 @@ export default function PageRenderer({
                         key={key}
                         title={renderMultilineText(block.title)}
                         description={block.description}
-                        breadcrumbs={block.breadcrumbs?.map((item) => ({
+                        breadcrumbs={(block.breadcrumbs || []).map((item) => ({
                             label: item.label,
                             href: item.href || undefined,
                         }))}
@@ -275,7 +276,7 @@ export default function PageRenderer({
                         photo={getStrapiImageSource(block.photo)}
                         name={block.name}
                         role={block.role}
-                        description={renderMultilineText(block.description)}
+                        description={block.description}
                     />
                 );
 
@@ -313,7 +314,7 @@ export default function PageRenderer({
                     <ContactsBlock
                         key={key}
                         title={block.title}
-                        breadcrumbs={(block.breadcrumbs || []).map((item) => ({
+                        breadcrumbs={block.breadcrumbs?.map((item) => ({
                             label: item.label,
                             href: item.href || undefined,
                         }))}
@@ -321,7 +322,7 @@ export default function PageRenderer({
                             number: item.number,
                         }))}
                         email={block.email}
-                        social={(block.socialLinks || []).map((item) => ({
+                        social={block.socialLinks?.map((item) => ({
                             label: item.label,
                             href: item.href,
                         }))}
@@ -350,6 +351,19 @@ export default function PageRenderer({
                         gallery={block.images.map((item) => ({
                             image: getStrapiImageSource(item.image),
                             alt: item.alt || item.image.alternativeText || undefined,
+                        }))}
+                    />
+                );
+
+            case 'blocks.screen':
+                return (
+                    <ScreenBlock
+                        key={key}
+                        background={block.colorPicker || undefined}
+                        screens={block.screens.map((item) => ({
+                            image: getStrapiImageSource(item.image),
+                            alt: item.alt || item.image.alternativeText || undefined,
+                            isMain: item.isMain === true,
                         }))}
                     />
                 );

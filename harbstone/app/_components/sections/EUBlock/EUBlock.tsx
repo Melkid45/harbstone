@@ -1,6 +1,7 @@
 import Image, { StaticImageData } from "next/image";
 import BlockWrapper from "../../general/block/BlockWrapper/BlockWrapper";
 import styles from './EUBlock.module.scss';
+import TextAreaContent from "../../general/TextAreaContent/TextAreaContent";
 interface EUBlockProps {
     projects: {
         title: string;
@@ -28,9 +29,10 @@ export default function EUBlock({
                                 >
                                     {item.title}
                                 </h3>
-                                <p className="text text--medium text--dark-color">
-                                    {item.description}
-                                </p>
+                                <TextAreaContent
+                                    value={item.description}
+                                    className="text text--medium text--dark-color"
+                                />
                             </div>
                         </div>
                         <div className={styles['eu-projects__media']}>

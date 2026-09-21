@@ -18,6 +18,10 @@ export default function Breadcrumbs({
 }: BreadcrumbsProps) {
     const { localizedHref } = useI18n();
 
+    if (!breadcrumbs.length) {
+        return null;
+    }
+
     return (
         <div className={`block__breadcrumbs text text--small text--${type}-color`}>
             {breadcrumbs.map((item) => (

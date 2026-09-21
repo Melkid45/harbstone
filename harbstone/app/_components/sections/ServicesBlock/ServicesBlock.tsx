@@ -8,6 +8,7 @@ import BlockTitle from "../../general/block/BlockTitle/BlockTitle";
 import styles from './ServicesBlock.module.scss';
 import Button from "../../general/Button/Button";
 import { useI18n } from "@/app/_i18n/LocaleProvider";
+import TextAreaContent from "../../general/TextAreaContent/TextAreaContent";
 
 interface ServicesBlockProps {
     title?: string;
@@ -82,7 +83,7 @@ export default function ServicesBlock({
 
     return (
         <BlockWrapper padding={dark ? 'y' : 'pb'} background={dark ? 'dark' : 'white'} overflow="visible">
-            {title && description && (
+            {title || description ? (
                 <div className="block__header block__header--pb">
                     <BlockTitle
                         title={title}
@@ -90,7 +91,7 @@ export default function ServicesBlock({
                         type={dark ? 'white' : 'default'}
                     />
                 </div>
-            )}
+            ) : null}
             <div className={`${styles.services} ${!title && !description && styles.services__only}`}>
                 {services.map((item, index) => (
                     <div
@@ -118,11 +119,12 @@ export default function ServicesBlock({
                                         {item.name}
                                     </h3>
                                 )}
-                                <p className={`text text--medium ${dark ? 'text--white-color' : 'text--dark-color'}`}>
-                                    {item.description}
-                                </p>
+                                <TextAreaContent
+                                    value={item.description}
+                                    className={`text text--medium ${dark ? 'text--white-color' : 'text--dark-color'}`}
+                                />
                             </div>
-                            {item.children && (
+                            {item.children?.length ? (
                                 <div className={styles.services__tags}>
                                     {item.children.map((item) => (
                                         <Button key={item.name} isLink={true} href={item.href} size="large" background={dark ? 'dark' : 'light'} color={dark ? 'white' : 'dark'}>
@@ -130,7 +132,7 @@ export default function ServicesBlock({
                                         </Button>
                                     ))}
                                 </div>
-                            )}
+                            ) : null}
                         </div>
                         {item.preview && (
                             <div className={styles.services__media}>

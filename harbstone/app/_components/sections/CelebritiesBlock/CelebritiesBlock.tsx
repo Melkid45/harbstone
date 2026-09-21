@@ -7,6 +7,7 @@ import BlockTitle from "../../general/block/BlockTitle/BlockTitle";
 import BlockWrapper from "../../general/block/BlockWrapper/BlockWrapper";
 import styles from './CelebritiesBlock.module.scss';
 import Button from '../../general/Button/Button';
+import TextAreaContent from '../../general/TextAreaContent/TextAreaContent';
 
 interface CelebritiesBlockProps {
     title: string;
@@ -84,9 +85,10 @@ export default function CelebritiesBlock({
                                 <h3 className="heading heading--font-1 heading--small heading--white-color">
                                     {slide.title}
                                 </h3>
-                                <p className="text text--small text--white-color text--weight-300">
-                                    {slide.description}
-                                </p>
+                                <TextAreaContent
+                                    value={slide.description}
+                                    className="text text--small text--white-color text--weight-300"
+                                />
                             </div>
                         </Link>
                     </SplideSlide>

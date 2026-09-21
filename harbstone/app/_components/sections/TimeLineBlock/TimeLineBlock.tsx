@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import BlockWrapper from "../../general/block/BlockWrapper/BlockWrapper";
 import styles from './TimeLineBlock.module.scss';
+import TextAreaContent from "../../general/TextAreaContent/TextAreaContent";
 
 interface TimeLineItem {
     date: string;
@@ -220,10 +221,12 @@ export default function TimeLineBlock({
 
     const activeYear = preparedTimelines[activeIndex]?.displayYear ?? '';
     const yearDigits = activeYear
-        .toString()
-        .padStart(YEAR_DIGIT_COUNT, "0")
-        .slice(-YEAR_DIGIT_COUNT)
-        .split("");
+        ? activeYear
+            .toString()
+            .padStart(YEAR_DIGIT_COUNT, "0")
+            .slice(-YEAR_DIGIT_COUNT)
+            .split("")
+        : [];
 
     if (!preparedTimelines.length) {
         return null;
@@ -239,31 +242,36 @@ export default function TimeLineBlock({
                 onMouseLeave={() => startAutoplayRef.current?.()}
             >
                 <div className={styles.timeline__nav}>
-                    <div
-                        className={cn(
-                            styles.timeline__year,
-                            "heading heading--font-1 heading--large heading--dark-color"
-                        )}
-                        data-timeline__year
-                        aria-label="Current timeline year"
-                    >
-                        {yearDigits.map((digit, index) => (
-                            <span key={index} className={styles['timeline__year-digit']}>
-                                <span
-                                    className={styles['timeline__year-track']}
-                                    data-timeline__year-track
-                                    style={{ '--digit-index': digit } as DigitStyle}
-                                >
-                                    {YEAR_DIGITS.map((yearDigit) => (
-                                        <span key={yearDigit}>{yearDigit}</span>
-                                    ))}
+                    {yearDigits.length ? (
+                        <div
+                            className={cn(
+                                styles.timeline__year,
+                                "heading heading--font-1 heading--large heading--dark-color"
+                            )}
+                            data-timeline__year
+                            aria-label="Current timeline year"
+                        >
+                            {yearDigits.map((digit, index) => (
+                                <span key={index} className={styles['timeline__year-digit']}>
+                                    <span
+                                        className={styles['timeline__year-track']}
+                                        data-timeline__year-track
+                                        style={{ '--digit-index': digit } as DigitStyle}
+                                    >
+                                        {YEAR_DIGITS.map((yearDigit) => (
+                                            <span key={yearDigit}>{yearDigit}</span>
+                                        ))}
+                                    </span>
                                 </span>
-                            </span>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
+                    ) : null}
                     <div
                         ref={viewportRef}
-                        className={styles.timeline__viewport}
+                        className={cn(
+                            styles.timeline__viewport,
+                            !yearDigits.length && styles['timeline__viewport--full']
+                        )}
                         data-timeline__viewport
                     >
                         <div
@@ -303,9 +311,10 @@ export default function TimeLineBlock({
                                         {item.label}
                                     </span>
                                     <span className={styles.timeline__dot} aria-hidden="true" />
-                                    <p className={cn(styles.timeline__text, "text text--small text--dark-color")}>
-                                        {item.description}
-                                    </p>
+                                    <TextAreaContent
+                                        value={item.description}
+                                        className={cn(styles.timeline__text, "text text--small text--dark-color")}
+                                    />
                                 </button>
                             ))}
                         </div>

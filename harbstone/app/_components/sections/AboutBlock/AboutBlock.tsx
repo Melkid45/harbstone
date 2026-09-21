@@ -29,9 +29,11 @@ export default function AboutBlock({
 }: AboutBlockProps) {
     return (
         <BlockWrapper padding="pb" background="dark" number={true}>
-            <Breadcrumbs
-                breadcrumbs={breadcrumbs}
-            />
+            {breadcrumbs.length > 0 ? (
+                <Breadcrumbs
+                    breadcrumbs={breadcrumbs}
+                />
+            ) : null}
             <div className="block__header">
                 <BlockTitle
                     title={title}

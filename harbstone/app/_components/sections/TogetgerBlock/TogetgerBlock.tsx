@@ -1,5 +1,6 @@
 import BlockWrapper from "../../general/block/BlockWrapper/BlockWrapper";
 import styles from './TogetgerBlock.module.scss';
+import TextAreaContent from "../../general/TextAreaContent/TextAreaContent";
 interface TogetgerBlockProps {
     title: string;
     items: {
@@ -20,9 +21,11 @@ export default function TogetgerBlock({
                 </h2>
                 <div className={styles.outcomes__list}>
                     {items.map((item) => (
-                        <p key={item.text} className="text text--medium text--dark-color">
-                            {item.text}
-                        </p>
+                        <TextAreaContent
+                            key={item.text}
+                            value={item.text}
+                            className="text text--medium text--dark-color"
+                        />
                     ))}
                 </div>
             </div>

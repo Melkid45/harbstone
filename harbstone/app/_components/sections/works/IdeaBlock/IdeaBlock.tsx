@@ -1,6 +1,5 @@
 import BlockTitle from "@/app/_components/general/block/BlockTitle/BlockTitle";
 import BlockWrapper from "@/app/_components/general/block/BlockWrapper/BlockWrapper";
-import { ReactNode } from "react";
 
 interface IdeaBlockProps {
     title?: string;
@@ -12,6 +11,10 @@ export default function IdeaBlock({
     title,
     desctiption
 }:IdeaBlockProps) {
+    if (!title && !desctiption) {
+        return null;
+    }
+
     return (
         <BlockWrapper size="narrow" background="white" padding="pt">
             <BlockTitle

@@ -2,6 +2,7 @@ import Image, { StaticImageData } from "next/image";
 import BlockWrapper from "../../general/block/BlockWrapper/BlockWrapper";
 import styles from './FounderBlock.module.scss';
 import { ReactNode } from "react";
+import TextAreaContent from "../../general/TextAreaContent/TextAreaContent";
 interface FounderBlockProps {
     photo: StaticImageData | string;
     name: string;
@@ -22,9 +23,16 @@ export default function FounderBlock({
                 <div className={styles.founder__body}>
                     <div className={styles.founder__content}>
                         <div className={styles.founder__container}>
-                            <p className={`${styles.founder__quote} text text--huge text--white-color`}>
-                                {description}
-                            </p>
+                            {typeof description === 'string' ? (
+                                <TextAreaContent
+                                    value={description}
+                                    className={`${styles.founder__quote} text text--huge text--white-color`}
+                                />
+                            ) : (
+                                <p className={`${styles.founder__quote} text text--huge text--white-color`}>
+                                    {description}
+                                </p>
+                            )}
                             <div className={styles.founder__signature}>
                                 <span className="text text--large text--white-color">
                                     {name}

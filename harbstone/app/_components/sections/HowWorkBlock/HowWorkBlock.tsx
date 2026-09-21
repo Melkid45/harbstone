@@ -1,6 +1,7 @@
 import Image, { StaticImageData } from "next/image";
 import BlockWrapper from "../../general/block/BlockWrapper/BlockWrapper";
 import styles from './HowWorkBlock.module.scss';
+import TextAreaContent from "../../general/TextAreaContent/TextAreaContent";
 interface HowWorkBlockProps {
     logo?: StaticImageData | string;
     items: {
@@ -32,9 +33,10 @@ export default function HowWorkBlock({
                             <h3 className="text text--large text--dark-color text--weight-600">
                                 {item.title}
                             </h3>
-                            <p className="text text--medium text--dark-color">
-                                {item.description}
-                            </p>
+                            <TextAreaContent
+                                value={item.description}
+                                className="text text--medium text--dark-color"
+                            />
                         </div>
                     ))}
                 </div>

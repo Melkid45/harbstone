@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import TextAreaContent from "../../general/TextAreaContent/TextAreaContent";
 
 interface AboutCounterPoint {
     title: string;
@@ -116,9 +117,10 @@ function AboutCounterStat({
             >
                 {initialValue}
             </div>
-            <p className="text text--medium text--white-color">
-                {point.description}
-            </p>
+            <TextAreaContent
+                value={point.description}
+                className="text text--medium text--white-color"
+            />
         </div>
     );
 }

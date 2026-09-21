@@ -202,6 +202,17 @@ export interface GalleryPageBlock extends StrapiComponent {
     coefficient?: number;
 }
 
+export interface ScreenPageBlock extends StrapiComponent {
+    __component: 'blocks.screen';
+    colorPicker?: string | null;
+    screens: {
+        id: number;
+        image: StrapiMedia;
+        alt?: string | null;
+        isMain?: boolean | null;
+    }[];
+}
+
 export interface IdeaPageBlock extends StrapiComponent {
     __component: 'blocks.idea';
     title?: string | null;
@@ -231,6 +242,7 @@ export type PageBlock =
     | ContactsPageBlock
     | EuProjectsPageBlock
     | GalleryPageBlock
+    | ScreenPageBlock
     | IdeaPageBlock
     | SharePageBlock;
 

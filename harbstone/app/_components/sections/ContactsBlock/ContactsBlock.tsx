@@ -8,10 +8,11 @@ import styles from './ContactsBlock.module.scss';
 import Button from "../../general/Button/Button";
 import { ArrowUpRight } from "lucide-react";
 import { useI18n } from "@/app/_i18n/LocaleProvider";
+import TextAreaContent from "../../general/TextAreaContent/TextAreaContent";
 
 interface ContactsBlockProps {
     title: string;
-    breadcrumbs: {
+    breadcrumbs?: {
         label: string;
         href?: string;
     }[];
@@ -19,7 +20,7 @@ interface ContactsBlockProps {
         number: string;
     }[];
     email: string;
-    social: {
+    social?: {
         label: string;
         href: string;
     }[];
@@ -41,10 +42,12 @@ export default function ContactsBlock({
 
     return (
         <BlockWrapper background="white" padding="pb" number={true}>
-            <Breadcrumbs
-                breadcrumbs={breadcrumbs}
-                type="dark"
-            />
+            {breadcrumbs?.length ? (
+                <Breadcrumbs
+                    breadcrumbs={breadcrumbs}
+                    type="dark"
+                />
+            ) : null}
             <div className="block__header block__header--pb">
                 <BlockTitle title={title} />
             </div>
@@ -66,24 +69,26 @@ export default function ContactsBlock({
                                         {email}
                                     </Link>
                                 </div>
-                                <div className={styles['get-in-touch__item']}>
-                                    <p
-                                        className={`${styles['get-in-touch__label']} text text--medium text--dark-color text--weight-400`}
-                                    >
-                                        {t.common.numbers}
-                                    </p>
-                                    {numbers?.map((item) => (
-                                        <Link
-                                            key={item.number}
-                                            href={`tel:${item.number}`}
-                                            className={`${styles['get-in-touch__link']} text text--medium text--dark-color text--weight-400`}
+                                {numbers?.length ? (
+                                    <div className={styles['get-in-touch__item']}>
+                                        <p
+                                            className={`${styles['get-in-touch__label']} text text--medium text--dark-color text--weight-400`}
                                         >
-                                            {item.number}
-                                        </Link>
-                                    ))}
-                                </div>
+                                            {t.common.numbers}
+                                        </p>
+                                        {numbers.map((item) => (
+                                            <Link
+                                                key={item.number}
+                                                href={`tel:${item.number}`}
+                                                className={`${styles['get-in-touch__link']} text text--medium text--dark-color text--weight-400`}
+                                            >
+                                                {item.number}
+                                            </Link>
+                                        ))}
+                                    </div>
+                                ) : null}
                             </div>
-                            {social && (
+                            {social?.length ? (
                                 <div className={styles['get-in-touch__block']}>
 
                                     <div className={styles['get-in-touch__item']}>
@@ -105,7 +110,7 @@ export default function ContactsBlock({
                                         ))}
                                     </div>
                                 </div>
-                            )}
+                            ) : null}
                         </div>
                         <Button size="large" color="white" background="dark" data-popup-open="request">
                             <ArrowUpRight />
@@ -127,7 +132,7 @@ export default function ContactsBlock({
                                 rel="noreferrer"
                                 className={`${styles['get-in-touch__link']} text text--medium text--dark-color text--weight-500`}
                             >
-                                {address}
+                                <TextAreaContent value={address} />
                             </Link>
                         </div>
 

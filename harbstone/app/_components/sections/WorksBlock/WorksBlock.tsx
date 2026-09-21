@@ -11,6 +11,7 @@ import Button from "../../general/Button/Button";
 import Breadcrumbs from "../../general/Breadcrumbs/Breadcrumbs";
 import { useI18n } from "@/app/_i18n/LocaleProvider";
 import { getWorksFilterHref } from "@/app/_lib/worksRouting";
+import TextAreaContent from "../../general/TextAreaContent/TextAreaContent";
 interface WorksBlockProps {
     title: string;
     description?: string;
@@ -147,7 +148,7 @@ export default function WorksBlock({
                     title={title}
                     description={description && description}
                 />
-                {filtered ? (
+                {filtered && categories?.length ? (
                     <>
                         <div className="block__nav">
                             {categories?.map((item) => (
@@ -199,8 +200,7 @@ export default function WorksBlock({
                             ))}
                         </div>
                     </>
-                ) : (
-                    categories && (
+                ) : !filtered && categories?.length ? (
                         <div className="block__nav block__nav--right">
                             {categories.map((item) => (
                                 <Link
@@ -212,8 +212,7 @@ export default function WorksBlock({
                                 </Link>
                             ))}
                         </div>
-                    )
-                )}
+                ) : null}
 
             </div>
             <div key={worksAnimationKey} className={styles.works}>
@@ -266,9 +265,10 @@ export default function WorksBlock({
                             >
                                 {item.name}
                             </h3>
-                            <p className="text text--medium text--dark-color">
-                                {item.description}
-                            </p>
+                            <TextAreaContent
+                                value={item.description}
+                                className="text text--medium text--dark-color"
+                            />
                         </div>
                     </Link>
                 ))}

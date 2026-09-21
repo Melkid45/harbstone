@@ -1,5 +1,6 @@
 import BlockWrapper from "../../general/block/BlockWrapper/BlockWrapper";
 import styles from './InformationBlock.module.scss';
+import TextAreaContent from "../../general/TextAreaContent/TextAreaContent";
 interface InformationBlockProps {
     title: string;
     texts: {
@@ -24,9 +25,11 @@ export default function InformationBlock({
                 </div>
                 <div className={styles.about__content}>
                     {texts.map((item) => (
-                        <p key={item.text} className="text text--medium text--dark-color">
-                            {item.text}
-                        </p>
+                        <TextAreaContent
+                            key={item.text}
+                            value={item.text}
+                            className="text text--medium text--dark-color"
+                        />
                     ))}
                 </div>
             </div>

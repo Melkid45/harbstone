@@ -9,6 +9,7 @@ interface BlockWrapperProps {
     background?: 'white' | 'dark' | 'dark-deep';
     overflow?: 'hidden' | 'visible';
     number?: boolean;
+    ref?: React.Ref<HTMLDivElement>;
 }
 
 export default function BlockWrapper({
@@ -18,7 +19,8 @@ export default function BlockWrapper({
     size,
     background = 'white',
     overflow = 'hidden',
-    number = false
+    number = false,
+    ref,
 }: BlockWrapperProps) {
     return (
         <section className={`
@@ -28,7 +30,7 @@ export default function BlockWrapper({
             ${styles[`block--${background}`]}
             ${styles[`block--overflow-${overflow}`]}
             ${number ? styles[`block--first`] : ''}
-        `}>
+        `} ref={ref}>
             {isContainer ? (
                 <Container>
                     {children}

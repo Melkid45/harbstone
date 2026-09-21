@@ -6,6 +6,7 @@ import Link from "next/link";
 import styles from './WorkHeroBlock.module.scss';
 import Button from "@/app/_components/general/Button/Button";
 import { useI18n } from "@/app/_i18n/LocaleProvider";
+import TextAreaContent from "@/app/_components/general/TextAreaContent/TextAreaContent";
 
 interface WorkHeroBlockProps {
     title: string;
@@ -49,9 +50,10 @@ export default function WorkHeroBlock({
                             {title}
                         </h1>
                         {description && (
-                            <p className="text text--medium text--dark-color">
-                                {description}
-                            </p>
+                            <TextAreaContent
+                                value={description}
+                                className="text text--medium text--dark-color"
+                            />
                         )}
                     </div>
                     <div className={styles['work-hero__meta']}>
@@ -85,7 +87,7 @@ export default function WorkHeroBlock({
                                 </Link>
                             </div>
                         )}
-                        {categories && (
+                        {categories?.length ? (
                             <div className={`${styles['work-hero__meta-item']} ${styles['work-hero__meta-item--wide']}`}>
                                 <p className={`${styles['work-hero__meta-label']} text text--small text--dark-color text--weight-400`}>
                                     {t.work.services}
@@ -98,7 +100,7 @@ export default function WorkHeroBlock({
                                     ))}
                                 </div>
                             </div>
-                        )}
+                        ) : null}
                     </div>
                 </div>
             </div>
