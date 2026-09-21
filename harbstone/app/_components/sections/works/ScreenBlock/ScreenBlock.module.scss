@@ -35,9 +35,16 @@
     overflow: hidden;
     background: #111;
     border-radius: calc(var(--border-radius) * 0.6);
+    will-change: transform;
+  }
+
+  &__backdrop {
+    display: none;
   }
 
   &__image {
+    position: relative;
+    z-index: 1;
     display: block;
     width: 100%;
     height: auto;
@@ -62,6 +69,14 @@
       &--main {
         display: block;
       }
+    }
+
+    &__backdrop {
+      display: block;
+      object-fit: cover;
+      filter: blur(28px) brightness(0.58) saturate(0.9);
+      opacity: 0.9;
+      transform: scale(1.12);
     }
   }
 }

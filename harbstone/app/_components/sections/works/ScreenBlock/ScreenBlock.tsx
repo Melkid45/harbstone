@@ -10,6 +10,7 @@ import styles from "./ScreenBlock.module.scss";
 const DEFAULT_BACKGROUND = '#000';
 const HEX_COLOR_PATTERN = /^#(?:[0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/i;
 const PIN_HEADER_GAP = 24;
+const ENTRANCE_OFFSET_PERCENT = 10;
 
 interface WebsiteScreen {
     image: string | StaticImageData;
@@ -135,35 +136,68 @@ export default function ScreenBlock({ screens, background }: ScreenBlockProps) {
             return timeline;
         };
 
+        const createEntrance = (activeIndexes: number[]) => {
+            const activeItems = activeIndexes.flatMap((index) => {
+                const item = items[index];
+
+                return item ? [item] : [];
+            });
+
+            return gsap.fromTo(
+                activeItems,
+                {
+                    yPercent: (index) => (
+                        index % 2 === 1
+                            ? -ENTRANCE_OFFSET_PERCENT
+                            : ENTRANCE_OFFSET_PERCENT
+                    ),
+                },
+                {
+                    yPercent: 0,
+                    ease: 'power2.out',
+                    stagger: 0.035,
+                    scrollTrigger: {
+                        trigger: section,
+                        start: 'top 72%',
+                        end: getPinStart,
+                        scrub: 0.8,
+                        invalidateOnRefresh: true,
+                    },
+                }
+            );
+        };
+
+        const createAnimations = (
+            activeIndexes: number[],
+            alternateDirections: boolean,
+        ) => {
+            const entrance = createEntrance(activeIndexes);
+            const timeline = createTimeline(activeIndexes, alternateDirections);
+
+            return () => {
+                entrance.scrollTrigger?.kill();
+                entrance.kill();
+                timeline.scrollTrigger?.kill();
+                timeline.kill();
+            };
+        };
+
         media.add(
             '(min-width: 801px) and (prefers-reduced-motion: no-preference)',
-            () => {
-                const timeline = createTimeline(
-                    visibleScreens.map((_, index) => index),
-                    true,
-                );
-
-                return () => {
-                    timeline.scrollTrigger?.kill();
-                    timeline.kill();
-                };
-            }
+            () => createAnimations(
+                visibleScreens.map((_, index) => index),
+                true,
+            )
         );
 
         media.add(
             '(max-width: 800px) and (prefers-reduced-motion: no-preference)',
-            () => {
-                const timeline = createTimeline([mainVisualIndex], false);
-
-                return () => {
-                    timeline.scrollTrigger?.kill();
-                    timeline.kill();
-                };
-            }
+            () => createAnimations([mainVisualIndex], false)
         );
 
         return () => {
             media.revert();
+            gsap.set(items, { clearProps: 'transform' });
             gsap.set(images, { clearProps: 'transform' });
         };
     }, [mainVisualIndex, visibleScreens]);
@@ -175,7 +209,7 @@ export default function ScreenBlock({ screens, background }: ScreenBlockProps) {
     const countClass = styles[`screen--${visibleScreens.length}`];
 
     return (
-        <BlockWrapper background="white" ref={sectionRef} padding="y">
+        <BlockWrapper background="white" overflow="hidden" ref={sectionRef} padding="y">
             <div
                 ref={blockRef}
                 className={`${styles.screen} ${countClass}`}
@@ -193,6 +227,14 @@ export default function ScreenBlock({ screens, background }: ScreenBlockProps) {
                             className={`${styles.screen__item} ${isMain ? styles['screen__item--main'] : ''}`}
                             data-main-screen={isMain ? 'true' : undefined}
                         >
+                            <Image
+                                src={item.image}
+                                alt=""
+                                aria-hidden="true"
+                                fill
+                                className={styles.screen__backdrop}
+                                sizes="100vw"
+                            />
                             <Image
                                 ref={(node) => {
                                     imageRefs.current[index] = node;
