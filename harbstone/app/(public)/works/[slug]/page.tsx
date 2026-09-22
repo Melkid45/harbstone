@@ -127,7 +127,7 @@ export default async function ServicePage({
                 )) ? (
                     <WorksBlock
                         title={t.common.moreWorks}
-                        padding="pb"
+                        padding="y"
                         works={workCards.filter((item) => item.slug !== cmsWork.slug)}
                         categories={buildWorkCategories(cmsServices, workCards)}
                     />

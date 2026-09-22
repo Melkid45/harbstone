@@ -9,8 +9,8 @@ import styles from "./ScreenBlock.module.scss";
 
 const DEFAULT_BACKGROUND = '#000';
 const HEX_COLOR_PATTERN = /^#(?:[0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/i;
-const PIN_HEADER_GAP = 24;
-const ENTRANCE_OFFSET_PERCENT = 10;
+const ENTRANCE_OFFSET_PERCENT = 15;
+const EXIT_DURATION = 0.3;
 
 interface WebsiteScreen {
     image: string | StaticImageData;
@@ -76,18 +76,42 @@ export default function ScreenBlock({ screens, background }: ScreenBlockProps) {
 
         const media = gsap.matchMedia();
 
-        // The fixed header sits above everything (mix-blend-mode: difference) and its
-        // height changes per breakpoint, while this section pins flush to the viewport
-        // top. Padding alone can't guarantee clearance at every width, so the pin start
-        // is nudged down by whatever the header still eats into the section's own
-        // top padding, recalculated on every ScrollTrigger refresh.
+        const getHeaderMetrics = () => {
+            const header = document.querySelector('header');
+
+            if (!header) {
+                return {
+                    height: 0,
+                    edgeGap: 0,
+                };
+            }
+
+            return {
+                height: header.getBoundingClientRect().height,
+                edgeGap: parseFloat(getComputedStyle(header).paddingTop) || 0,
+            };
+        };
+
+        // The screen starts immediately after the full header box. Since the header has
+        // equal vertical padding, this makes the gap above its content, the gap below it,
+        // and the gap below the pinned screen visually identical at every breakpoint.
+        const syncPinnedGeometry = () => {
+            const { height, edgeGap } = getHeaderMetrics();
+            const availableHeight = Math.max(window.innerHeight - height - edgeGap, 1);
+
+            block.style.setProperty('--screen-pinned-height', `${availableHeight}px`);
+        };
+
         const getPinStart = () => {
-            const headerHeight = document.querySelector('header')?.getBoundingClientRect().height ?? 0;
+            const { height } = getHeaderMetrics();
             const sectionPaddingTop = parseFloat(getComputedStyle(section).paddingTop) || 0;
-            const offset = Math.max(0, headerHeight + PIN_HEADER_GAP - sectionPaddingTop);
+            const offset = height - sectionPaddingTop;
 
             return `top top+=${offset}`;
         };
+
+        syncPinnedGeometry();
+        ScrollTrigger.addEventListener('refreshInit', syncPinnedGeometry);
 
         const createTimeline = (
             activeIndexes: number[],
@@ -101,7 +125,7 @@ export default function ScreenBlock({ screens, background }: ScreenBlockProps) {
                 scrollTrigger: {
                     trigger: section,
                     start: getPinStart,
-                    end: 'bottom top',
+                    end: () => `+=${block.offsetHeight * (1 + EXIT_DURATION)}`,
                     scrub: 1,
                     pin: true,
                     invalidateOnRefresh: true,
@@ -133,6 +157,26 @@ export default function ScreenBlock({ screens, background }: ScreenBlockProps) {
                 );
             });
 
+            const activeItems = activeIndexes.flatMap((index) => {
+                const item = items[index];
+
+                return item ? [item] : [];
+            });
+
+            timeline.to(
+                activeItems,
+                {
+                    yPercent: (index) => (
+                        index % 2 === 1
+                            ? -ENTRANCE_OFFSET_PERCENT
+                            : ENTRANCE_OFFSET_PERCENT
+                    ),
+                    duration: EXIT_DURATION,
+                    ease: 'power2.in',
+                },
+                1
+            );
+
             return timeline;
         };
 
@@ -143,7 +187,7 @@ export default function ScreenBlock({ screens, background }: ScreenBlockProps) {
                 return item ? [item] : [];
             });
 
-            return gsap.fromTo(
+            gsap.set(
                 activeItems,
                 {
                     yPercent: (index) => (
@@ -151,14 +195,17 @@ export default function ScreenBlock({ screens, background }: ScreenBlockProps) {
                             ? -ENTRANCE_OFFSET_PERCENT
                             : ENTRANCE_OFFSET_PERCENT
                     ),
-                },
+                }
+            );
+
+            return gsap.to(
+                activeItems,
                 {
                     yPercent: 0,
                     ease: 'power2.out',
-                    stagger: 0.035,
                     scrollTrigger: {
                         trigger: section,
-                        start: 'top 72%',
+                        start: 'top 50%',
                         end: getPinStart,
                         scrub: 0.8,
                         invalidateOnRefresh: true,
@@ -196,7 +243,9 @@ export default function ScreenBlock({ screens, background }: ScreenBlockProps) {
         );
 
         return () => {
+            ScrollTrigger.removeEventListener('refreshInit', syncPinnedGeometry);
             media.revert();
+            block.style.removeProperty('--screen-pinned-height');
             gsap.set(items, { clearProps: 'transform' });
             gsap.set(images, { clearProps: 'transform' });
         };
@@ -209,7 +258,7 @@ export default function ScreenBlock({ screens, background }: ScreenBlockProps) {
     const countClass = styles[`screen--${visibleScreens.length}`];
 
     return (
-        <BlockWrapper background="white" overflow="hidden" ref={sectionRef} padding="y">
+        <BlockWrapper background="white" overflow="hidden" ref={sectionRef} padding="pt">
             <div
                 ref={blockRef}
                 className={`${styles.screen} ${countClass}`}
