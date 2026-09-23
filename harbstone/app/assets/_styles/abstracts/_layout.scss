@@ -94,7 +94,7 @@
   &__nav {
     display: flex;
     gap: 40px;
-
+    flex-wrap: wrap;
     &--right {
       display: flex;
       align-items: end;
