@@ -145,7 +145,15 @@ export default function WorksBlock({
             )}
             <div className={`block__header block__header--pb ${!filtered && 'block__header--grid'}`}>
                 <BlockTitle
-                    title={title}
+                    title={filtered ? (
+                        <Link
+                            href={localizedHref('/works')}
+                            className={styles.works__titleLink}
+                            scroll={false}
+                        >
+                            {title}
+                        </Link>
+                    ) : title}
                     description={description && description}
                 />
                 {filtered && categories?.length ? (

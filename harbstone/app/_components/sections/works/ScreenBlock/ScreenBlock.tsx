@@ -30,6 +30,8 @@ export default function ScreenBlock({ screens, background }: ScreenBlockProps) {
     const sectionRef = useRef<HTMLDivElement | null>(null);
     const itemRefs = useRef<Array<HTMLDivElement | null>>([]);
     const imageRefs = useRef<Array<HTMLImageElement | null>>([]);
+    const mobileItemRef = useRef<HTMLDivElement | null>(null);
+    const mobileTrackRef = useRef<HTMLDivElement | null>(null);
     const { visibleScreens, mainVisualIndex } = useMemo(() => {
         const availableScreens = screens.slice(0, 3);
         const markedMainIndex = availableScreens.findIndex((screen) => screen.isMain);
@@ -61,6 +63,8 @@ export default function ScreenBlock({ screens, background }: ScreenBlockProps) {
         const section = sectionRef.current;
         const items = itemRefs.current.slice(0, visibleScreens.length);
         const images = imageRefs.current.slice(0, visibleScreens.length);
+        const mobileItem = mobileItemRef.current;
+        const mobileTrack = mobileTrackRef.current;
 
         if (
             !block
@@ -229,6 +233,75 @@ export default function ScreenBlock({ screens, background }: ScreenBlockProps) {
             };
         };
 
+        const createMobileAnimation = () => {
+            if (!mobileItem || !mobileTrack) {
+                return;
+            }
+
+            gsap.set(mobileItem, { yPercent: ENTRANCE_OFFSET_PERCENT });
+
+            const entrance = gsap.to(mobileItem, {
+                yPercent: 0,
+                ease: 'power2.out',
+                scrollTrigger: {
+                    trigger: section,
+                    start: 'top 50%',
+                    end: getPinStart,
+                    scrub: 0.8,
+                    invalidateOnRefresh: true,
+                },
+            });
+            const timeline = gsap.timeline({
+                defaults: {
+                    duration: 1,
+                    ease: 'none',
+                },
+                scrollTrigger: {
+                    trigger: section,
+                    start: getPinStart,
+                    end: () => {
+                        const trackDistance = Math.max(
+                            mobileTrack.offsetHeight - mobileItem.clientHeight,
+                            block.offsetHeight,
+                        );
+
+                        return `+=${trackDistance * (1 + EXIT_DURATION)}`;
+                    },
+                    scrub: 1,
+                    pin: true,
+                    invalidateOnRefresh: true,
+                },
+            });
+
+            timeline.fromTo(
+                mobileTrack,
+                { y: 0 },
+                {
+                    y: () => Math.min(
+                        mobileItem.clientHeight - mobileTrack.offsetHeight,
+                        0,
+                    ),
+                },
+                0,
+            );
+            timeline.to(
+                mobileItem,
+                {
+                    yPercent: -ENTRANCE_OFFSET_PERCENT,
+                    duration: EXIT_DURATION,
+                    ease: 'power2.in',
+                },
+                1,
+            );
+
+            return () => {
+                entrance.scrollTrigger?.kill(true);
+                entrance.kill();
+                timeline.scrollTrigger?.kill(true);
+                timeline.kill();
+            };
+        };
+
         media.add(
             '(min-width: 801px) and (prefers-reduced-motion: no-preference)',
             () => createAnimations(
@@ -239,10 +312,7 @@ export default function ScreenBlock({ screens, background }: ScreenBlockProps) {
 
         media.add(
             '(max-width: 800px) and (prefers-reduced-motion: no-preference)',
-            () => createAnimations(
-                visibleScreens.map((_, index) => index),
-                true,
-            )
+            createMobileAnimation,
         );
 
         return () => {
@@ -251,6 +321,7 @@ export default function ScreenBlock({ screens, background }: ScreenBlockProps) {
             block.style.removeProperty('--screen-pinned-height');
             gsap.set(items, { clearProps: 'transform' });
             gsap.set(images, { clearProps: 'transform' });
+            gsap.set([mobileItem, mobileTrack], { clearProps: 'transform' });
         };
     }, [mainVisualIndex, visibleScreens]);
 
@@ -276,7 +347,7 @@ export default function ScreenBlock({ screens, background }: ScreenBlockProps) {
                                 itemRefs.current[index] = node;
                             }}
                             key={`${typeof item.image === 'string' ? item.image : item.image.src}-${index}`}
-                            className={`${styles.screen__item} ${isMain ? styles['screen__item--main'] : ''}`}
+                            className={`${styles.screen__item} ${styles['screen__item--desktop']} ${isMain ? styles['screen__item--main'] : ''}`}
                             data-main-screen={isMain ? 'true' : undefined}
                         >
                             <Image
@@ -302,6 +373,23 @@ export default function ScreenBlock({ screens, background }: ScreenBlockProps) {
                         </div>
                     );
                 })}
+                <div
+                    ref={mobileItemRef}
+                    className={`${styles.screen__item} ${styles['screen__item--mobile']}`}
+                >
+                    <div ref={mobileTrackRef} className={styles.screen__mobileTrack}>
+                        {screens.map((item, index) => (
+                            <Image
+                                key={`${typeof item.image === 'string' ? item.image : item.image.src}-mobile-${index}`}
+                                src={item.image}
+                                alt={item.alt || `Website screen ${index + 1}`}
+                                className={styles.screen__mobileImage}
+                                sizes="100vw"
+                                onLoad={() => ScrollTrigger.refresh()}
+                            />
+                        ))}
+                    </div>
+                </div>
             </div>
         </BlockWrapper>
     );

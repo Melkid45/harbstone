@@ -5,6 +5,9 @@
   grid-template-columns: 1fr 1fr;
   column-gap: 50px;
   row-gap: 80px;
+  &__titleLink {
+    color: inherit;
+  }
   &__category {
     opacity: 0.35;
     transition: opacity 0.3s ease;
