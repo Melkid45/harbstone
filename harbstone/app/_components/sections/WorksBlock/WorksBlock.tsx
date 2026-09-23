@@ -66,6 +66,17 @@ const normalizeHref = (
     href && href !== '/' ? href : getWorksFilterHref(service, soft)
 );
 
+const getCategoryHref = (category: NonNullable<WorksBlockProps['categories']>[number]) => {
+    const service = category.slug || slugify(category.label);
+    const firstChild = category.children?.[0];
+
+    return normalizeHref(
+        firstChild?.href || category.href,
+        service,
+        firstChild?.slug || (firstChild ? slugify(firstChild.label) : undefined),
+    );
+};
+
 export default function WorksBlock({
     title,
     description,
@@ -154,7 +165,7 @@ export default function WorksBlock({
                             {categories?.map((item) => (
                                 <Link
                                     key={item.label}
-                                    href={localizedHref(normalizeHref(item.href, item.slug || slugify(item.label)))}
+                                    href={localizedHref(getCategoryHref(item))}
                                     className={`
                                         ${styles.works__category}
                                         ${item.slug === activeCategory?.slug ? styles['works__category--active'] : ''}
@@ -167,22 +178,9 @@ export default function WorksBlock({
                                 </Link>
                             ))}
                         </div>
-                        <div className="block__actions">
-                            {activeCategory ? (
-                                <Button
-                                    isLink={true}
-                                    href={normalizeHref(
-                                        activeCategory.href,
-                                        activeCategory.slug || slugify(activeCategory.label),
-                                    )}
-                                    size="large"
-                                    background={!activeFilter?.soft ? 'dark' : 'light'}
-                                    color={!activeFilter?.soft ? 'white' : 'dark'}
-                                >
-                                    {t.common.allWorks}
-                                </Button>
-                            ) : null}
-                            {activeCategory?.children?.map((child, index) => (
+                        {activeCategory?.children?.length ? (
+                            <div className="block__actions">
+                                {activeCategory.children.map((child, index) => (
                                     <Button
                                         key={`${activeCategory.label}-${child.label}-${index}`}
                                         isLink={true}
@@ -197,8 +195,9 @@ export default function WorksBlock({
                                     >
                                         {child.label}
                                     </Button>
-                            ))}
-                        </div>
+                                ))}
+                            </div>
+                        ) : null}
                     </>
                 ) : !filtered && categories?.length ? (
                         <div className="block__nav block__nav--right">
