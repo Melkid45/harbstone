@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef } from "react";
+import { useLayoutEffect, useMemo, useRef } from "react";
 import Image, { StaticImageData } from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -56,7 +56,7 @@ export default function ScreenBlock({ screens, background }: ScreenBlockProps) {
         ? background
         : DEFAULT_BACKGROUND;
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const block = blockRef.current;
         const section = sectionRef.current;
         const items = itemRefs.current.slice(0, visibleScreens.length);
@@ -222,9 +222,9 @@ export default function ScreenBlock({ screens, background }: ScreenBlockProps) {
             const timeline = createTimeline(activeIndexes, alternateDirections);
 
             return () => {
-                entrance.scrollTrigger?.kill();
+                entrance.scrollTrigger?.kill(true);
                 entrance.kill();
-                timeline.scrollTrigger?.kill();
+                timeline.scrollTrigger?.kill(true);
                 timeline.kill();
             };
         };
@@ -239,7 +239,10 @@ export default function ScreenBlock({ screens, background }: ScreenBlockProps) {
 
         media.add(
             '(max-width: 800px) and (prefers-reduced-motion: no-preference)',
-            () => createAnimations([mainVisualIndex], false)
+            () => createAnimations(
+                visibleScreens.map((_, index) => index),
+                true,
+            )
         );
 
         return () => {
