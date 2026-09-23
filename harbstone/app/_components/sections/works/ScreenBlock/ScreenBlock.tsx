@@ -168,8 +168,8 @@ export default function ScreenBlock({ screens, background }: ScreenBlockProps) {
                 {
                     yPercent: (index) => (
                         index % 2 === 1
-                            ? -ENTRANCE_OFFSET_PERCENT
-                            : ENTRANCE_OFFSET_PERCENT
+                            ? ENTRANCE_OFFSET_PERCENT
+                            : -ENTRANCE_OFFSET_PERCENT
                     ),
                     duration: EXIT_DURATION,
                     ease: 'power2.in',
