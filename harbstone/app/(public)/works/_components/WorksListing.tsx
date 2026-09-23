@@ -12,7 +12,6 @@ import {
     categories as localCategories,
     getFilteredWorks,
 } from "../works";
-import { getWorksFilterHref } from "@/app/_lib/worksRouting";
 
 interface WorksListingProps {
     locale: Locale;
@@ -35,33 +34,19 @@ export default async function WorksListing({
     const cmsWorkCards = cmsWorks.map(mapWorkToCard);
     const cmsCategories = buildWorkCategories(cmsServices, cmsWorkCards);
     const useCmsCatalog = cmsCategories.length > 0;
-    const serviceCategories = useCmsCatalog ? cmsCategories : localCategories;
-    const categories = [
-        {
-            label: t.common.allWorks,
-            href: getWorksFilterHref(),
-            slug: undefined,
-            children: [],
-        },
-        ...serviceCategories,
-    ];
+    const categories = useCmsCatalog ? cmsCategories : localCategories;
     const activeCategory = service
         ? categories.find((category) => category.slug === service)
-        : categories[0];
-    const requestedSoft = activeCategory?.children.find((child) => (
+        : undefined;
+    const activeSoft = activeCategory?.children.find((child) => (
         child.slug === soft
     ))?.slug;
-    const activeSoft = soft
-        ? requestedSoft
-        : activeCategory?.slug
-            ? activeCategory.children[0]?.slug
-            : undefined;
 
     if (
         strict
         && (
             !activeCategory
-            || (Boolean(soft) && !requestedSoft)
+            || (Boolean(soft) && !activeSoft)
         )
     ) {
         notFound();

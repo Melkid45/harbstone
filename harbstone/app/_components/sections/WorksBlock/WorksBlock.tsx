@@ -66,17 +66,6 @@ const normalizeHref = (
     href && href !== '/' ? href : getWorksFilterHref(service, soft)
 );
 
-const getCategoryHref = (category: NonNullable<WorksBlockProps['categories']>[number]) => {
-    const service = category.slug || slugify(category.label);
-    const firstChild = category.children?.[0];
-
-    return normalizeHref(
-        firstChild?.href || category.href,
-        service,
-        firstChild?.slug || (firstChild ? slugify(firstChild.label) : undefined),
-    );
-};
-
 export default function WorksBlock({
     title,
     description,
@@ -95,7 +84,7 @@ export default function WorksBlock({
     const videoRefs = useRef<Array<HTMLVideoElement | null>>([]);
     const activeCategory = categories?.find((item) => (
         item.slug === activeFilter?.service
-    )) || categories?.[0];
+    ));
     const worksAnimationKey = filtered
         ? `${activeFilter?.service || 'all'}-${activeFilter?.soft || 'all'}-${works.map((work) => work.href).join('|')}`
         : 'static';
@@ -165,7 +154,7 @@ export default function WorksBlock({
                             {categories?.map((item) => (
                                 <Link
                                     key={item.label}
-                                    href={localizedHref(getCategoryHref(item))}
+                                    href={localizedHref(normalizeHref(item.href, item.slug || slugify(item.label)))}
                                     className={`
                                         ${styles.works__category}
                                         ${item.slug === activeCategory?.slug ? styles['works__category--active'] : ''}
@@ -178,9 +167,21 @@ export default function WorksBlock({
                                 </Link>
                             ))}
                         </div>
-                        {activeCategory?.children?.length ? (
+                        {activeCategory ? (
                             <div className="block__actions">
-                                {activeCategory.children.map((child, index) => (
+                                <Button
+                                    isLink={true}
+                                    href={normalizeHref(
+                                        activeCategory.href,
+                                        activeCategory.slug || slugify(activeCategory.label),
+                                    )}
+                                    size="large"
+                                    background={!activeFilter?.soft ? 'dark' : 'light'}
+                                    color={!activeFilter?.soft ? 'white' : 'dark'}
+                                >
+                                    {t.common.allWorks}
+                                </Button>
+                                {activeCategory.children?.map((child, index) => (
                                     <Button
                                         key={`${activeCategory.label}-${child.label}-${index}`}
                                         isLink={true}
